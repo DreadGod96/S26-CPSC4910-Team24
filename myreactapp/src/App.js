@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
-function App() {
+function About() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <nav className="navbar background">
+        <ul className="nav-list">
+          <div className="logo">
+            <img src="hugo.jpg" alt="hugo" />
+          </div>
+          <li>
+            <a href="#about">About</a>
+          </li>
+        </ul>
+        <div className="rightNav">
+          <input type="text" name="search" id="search" />
+          <button className="btn btn-sm">Search</button>
+        </div>
+      </nav>
+
+      <section className="about-section">
+        <div className="about-container">
+          <h1>CocoDinoBytes</h1>
+
+          <div className="about-content">
+            <h2>Our Team</h2>
+            <p>1. Emma Abraham</p>
+            <p>2. Ryan Beck</p>
+            <p>3 Eli Monroe</p>
+            <p>4. Nolen Schnabel</p>
+            <p>5. Sarah Tetterton</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
-export default App;
+export default About;
