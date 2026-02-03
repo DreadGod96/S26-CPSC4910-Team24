@@ -59,7 +59,9 @@
 }
 
 .logo img {
-  display: none;
+  height: 50px;
+  width: auto;
+  border-radius: 5px;
 }
 
 .nav-list li a {
@@ -161,12 +163,6 @@
 .about-content p:hover {
   transform: translateX(10px);
   color: #001f5c;
-}
-
-.logo img {
-  height: 50px;
-  width: auto;
-  border-radius: 5px;
 }
 
 /* Body reset */
