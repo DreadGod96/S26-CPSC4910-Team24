@@ -7,12 +7,6 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -21,7 +15,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(255, 1, 179);
 }
 
 .App-link {
@@ -35,4 +29,148 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Navbar Styling */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background-color: #282c34;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.background {
+  background-color: #001133;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 30px;
+}
+
+.logo {
+  margin-right: 20px;
+}
+
+.logo img {
+  display: none;
+}
+
+.nav-list li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-family: 'Georgia', serif;
+  transition: color 0.3s;
+}
+
+.nav-list li a:hover {
+  color: #ff0080;
+}
+
+.rightNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rightNav input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.btn {
+  padding: 8px 16px;
+  background-color: #fadadd;
+  color: navy;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #f8b4b8;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* About Page Styling */
+.about-section {
+  margin: 60px auto;
+  padding: 40px 20px;
+  max-width: 900px;
+}
+
+.about-container {
+  background-color: #fadadd;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.about-container h1 {
+  color: navy;
+  font-size: 3rem;
+  font-family: 'Georgia', serif;
+  margin-bottom: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.about-content {
+  margin-top: 30px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 30px;
+  border-radius: 10px;
+  border: 2px solid navy;
+}
+
+.about-content h2 {
+  color: navy;
+  font-size: 2rem;
+  font-family: 'Georgia', serif;
+  margin-bottom: 25px;
+  border-bottom: 3px solid navy;
+  padding-bottom: 10px;
+}
+
+.about-content p {
+  color: navy;
+  font-size: 1.2rem;
+  font-family: 'Verdana', sans-serif;
+  line-height: 1.8;
+  margin: 12px 0;
+  padding-left: 20px;
+  transition: transform 0.2s;
+}
+
+.about-content p:hover {
+  transform: translateX(10px);
+  color: #001f5c;
+}
+
+/* Body reset */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fadadd;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

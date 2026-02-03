@@ -7,7 +7,7 @@ function About() {
       <nav className="navbar background">
         <ul className="nav-list">
           <div className="logo">
-            <img src="hugo.jpg" alt="" />
+            <img src="hugo.jpeg" alt="hugo"/>
           </div>
           <li>
             <a href="#about">About</a>
