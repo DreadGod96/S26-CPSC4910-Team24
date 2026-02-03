@@ -163,6 +163,12 @@
   color: #001f5c;
 }
 
+.logo img {
+  height: 50px;
+  width: auto;
+  border-radius: 5px;
+}
+
 /* Body reset */
 body {
   margin: 0;
