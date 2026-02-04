@@ -27,7 +27,7 @@ function About() {
             <h2>Our Team</h2>
             <p>1. Emma Abraham</p>
             <p>2. Ryan Beck</p>
-            <p>3 Eli Monroe</p>
+            <p>3. Eli Monroe</p>
             <p>4. Nolen Schnabel</p>
             <p>5. Sarah Tetterton</p>
           </div>
