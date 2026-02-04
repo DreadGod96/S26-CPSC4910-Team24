@@ -18,11 +18,11 @@ How to start the website:
 5. Start localhost site:
 
          "npm start"
+      
+As of right now, the website is only hosted locally
 
 <br>
 <br>
-      
-As of right now, the website is only hosted locally
 
 Workflows (Showcasing DevOps):
 
