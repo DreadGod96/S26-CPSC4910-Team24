@@ -19,16 +19,17 @@ How to start the website:
 
          "npm start"
 
-
-
+<br>
+<br>
+      
 As of right now, the website is only hosted locally
 
 Workflows (Showcasing DevOps):
 
-         1. Branch new features
-         2. Merge new feature for demo
-         3. Push to dev cloud via configs in /environs/development for demo
-         4. Post-demo, push to production cloud via configs in /environs/production for release
+         1. Branch new feature
+         2. Merge new feature into main for demo
+         3. Push to dev cloud via configs in /environs/development for demo (automate)
+         4. Post-demo, push to production cloud via configs in /environs/production for release (automate)
 
 **TODO: Automate workflows via github actions
 
