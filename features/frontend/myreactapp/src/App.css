@@ -25,7 +25,7 @@
 
 /* Links withing the app */
 .App-link {
-  color: #F7E9E5;
+  color: #F7E3E8;
 }
 
 /* ========================================
@@ -96,7 +96,7 @@
   border: 1px solid #FCDDE5;
   border-radius: 4px;
   font-size: 0.9rem;
-  background-color: #F5E8EB;
+  background-color: #F7E3E8;
 }
 
 /* Primary button styling */
@@ -135,7 +135,7 @@
 
 /* Main content container on about page */
 .about-container {
-  background-color: #FCDDE5;
+  background-color: #F7E3E8;
   padding: 50px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -156,7 +156,7 @@
 /* About page text content area */
 .about-content {
   margin-top: 30px;
-  background-color: #FCDDE5;
+  background-color: #F7E3E8;
   padding: 30px;
   border-radius: 10px;
   border: 2px solid #8596B4;
@@ -196,7 +196,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #F5E8EB;
+  background-color: #FCDDE5;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
