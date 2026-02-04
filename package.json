@@ -1,0 +1,25 @@
+{
+  "name": "s26-cpsc4910-team24-root",
+  "version": "1.0.0",
+  "description": "Good (Truck) Driver Incentive Program",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "init": "npm install --prefix features/frontend && npm install --prefix features/about_me_svc",
+    "frontend": "npm start --prefix features/frontend", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DreadGod96/S26-CPSC4910-Team24.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DreadGod96/S26-CPSC4910-Team24/issues"
+  },
+  "homepage": "https://github.com/DreadGod96/S26-CPSC4910-Team24#readme"
+}
