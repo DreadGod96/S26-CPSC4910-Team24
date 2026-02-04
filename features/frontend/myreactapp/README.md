@@ -1,3 +1,30 @@
+# Website
+The website was built using React.
+
+Prerequisites: node.js
+
+How to start the website:
+1. Navigate to
+
+         "/features/frontend/myreactapp"
+
+3. Install dependencies:
+   
+         "npm install"
+   
+5. Start localhost site:
+
+         "npm start"
+
+As of right now, the website is only hosted locally
+
+# Color Pallet
+ - #F8F3EA - off white
+ - #FFDBB1 - peach
+ - #0B1957 - navy
+ - #FA9EBC - bubble gum pink
+
+## Notes provided by the react app
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
