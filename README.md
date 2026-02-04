@@ -29,4 +29,5 @@ Workflows (Showcasing DevOps):
          4. Post-demo, push to production cloud via configs in /environs/production for release
 
 **TODO: Automate workflows via github actions
+
 **TODO: Create seperate cloud environments and link with code
