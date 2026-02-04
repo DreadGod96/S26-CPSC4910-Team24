@@ -9,14 +9,14 @@ Prerequisites: node.js
 How to start the website:
 1. Navigate to
    
-    "/features/frontend/myreactapp"
+> "/features/frontend/myreactapp"
 
 3. Install dependencies:
    
-     "npm install"
+> "npm install"
 
 5. Start localhost site:
    
-     "npm start"
+> "npm start"
 
 As of right now, the website is only hosted locally
