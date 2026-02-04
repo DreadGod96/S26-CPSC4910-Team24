@@ -13,19 +13,19 @@
 
 /* Main header section - full screen centered content area */
 .App-header {
-  background-color: #0B1957 ;
+  background-color: #092E4C ;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #FA9EBC;
+  color: #E7B7C3;
 }
 
 /* Links withing the app */
 .App-link {
-  color: #FFDBB1;
+  color: #F7E9E5;
 }
 
 /* ========================================
@@ -37,13 +37,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 15px 30px;
-  background-color: #0B1957;
+  background-color: #092E4C;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Background color for navbar */
 .background {
-  background-color: #001133;
+  background-color: #092E4C;
 }
 
 /* Navigation menue list - contains links */
@@ -70,7 +70,7 @@
 
 /* Navigation links styling */
 .nav-list li a {
-  color: #F8F3EA;
+  color: #FCDDE5;
   text-decoration: none;
   font-size: 1.1rem;
   font-family: 'Georgia', serif;
@@ -79,7 +79,7 @@
 
 /* Navigation links hover effect */
 .nav-list li a:hover {
-  color: #FA9EBC;
+  color: #EAACBC;
 }
 
 /* Right side of navbar - search and buttons */
@@ -92,16 +92,18 @@
 /* Search input field in nav bar */
 .rightNav input {
   padding: 8px 12px;
-  border: 1px solid #F8F3EA;
+  color: #092E4C;
+  border: 1px solid #FCDDE5;
   border-radius: 4px;
   font-size: 0.9rem;
+  background-color: #F5E8EB;
 }
 
 /* Primary button styling */
 .btn {
   padding: 8px 16px;
-  background-color: #FFDBB1;
-  color: #0B1957;
+  background-color: #8596B4;
+  color: #092E4C;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -112,7 +114,7 @@
 
 /* Button hover effect */
 .btn:hover {
-  background-color: #FA9EBC;
+  background-color: #EAACBC;
 }
 
 /* Smaller button variant */
@@ -133,15 +135,17 @@
 
 /* Main content container on about page */
 .about-container {
-  background-color: #FFDBB1;
+  background-color: #FCDDE5;
   padding: 50px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  /* border: 2px solid #E7B7C3; */
 }
 
 /* About page main heading */
 .about-container h1 {
-  color: #0B1957;
+  color: #092E4C;
   font-size: 3rem;
   font-family: 'Georgia', serif;
   margin-bottom: 40px;
@@ -152,25 +156,25 @@
 /* About page text content area */
 .about-content {
   margin-top: 30px;
-  background-color: #F8F3EA;
+  background-color: #FCDDE5;
   padding: 30px;
   border-radius: 10px;
-  border: 2px solid #0B1957;
+  border: 2px solid #8596B4;
 }
 
 /* About page section headings */
 .about-content h2 {
-  color: #0B1957;
+  color: #092E4C;
   font-size: 2rem;
   font-family: 'Georgia', serif;
   margin-bottom: 25px;
-  border-bottom: 3px solid #0B1957;
+  border-bottom: 3px solid #8596B4;
   padding-bottom: 10px;
 }
 
 /* About page paragraphs */
 .about-content p {
-  color: #0B1957;
+  color: #092E4C;
   font-size: 1.2rem;
   font-family: 'Verdana', sans-serif;
   line-height: 1.8;
@@ -182,7 +186,7 @@
 /* About page paragraph hover effect */
 .about-content p:hover {
   transform: translateX(10px);
-  color: #0B1957;
+  color: #092E4C;
 }
 
 /* ========================================
@@ -192,7 +196,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #F8F3EA;
+  background-color: #F5E8EB;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

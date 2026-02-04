@@ -19,10 +19,11 @@ How to start the website:
 As of right now, the website is only hosted locally
 
 # Color Pallet
- - #F8F3EA - off white
- - #FFDBB1 - peach
- - #0B1957 - navy
- - #FA9EBC - bubble gum pink
+ - #092E4C - dark blue
+ - #8596B4 - dusty blue
+ - #EAACBC - blush pink
+ - #FCDDE5 - pale blush
+ - #F5E8EB - off white
 
 ## Notes provided by the react app
 # Getting Started with Create React App
