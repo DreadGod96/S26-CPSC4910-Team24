@@ -70,7 +70,7 @@
 
 /* Navigation links styling */
 .nav-list li a {
-  color: #fff;
+  color: #F8F3EA;
   text-decoration: none;
   font-size: 1.1rem;
   font-family: 'Georgia', serif;
@@ -92,7 +92,7 @@
 /* Search input field in nav bar */
 .rightNav input {
   padding: 8px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #F8F3EA;
   border-radius: 4px;
   font-size: 0.9rem;
 }
@@ -112,7 +112,7 @@
 
 /* Button hover effect */
 .btn:hover {
-  background-color: #FFDBB1;
+  background-color: #FA9EBC;
 }
 
 /* Smaller button variant */
@@ -141,7 +141,7 @@
 
 /* About page main heading */
 .about-container h1 {
-  color: 0B1957;
+  color: #0B1957;
   font-size: 3rem;
   font-family: 'Georgia', serif;
   margin-bottom: 40px;
@@ -192,7 +192,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #FFDBB1;
+  background-color: #F8F3EA;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
