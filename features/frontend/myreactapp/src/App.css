@@ -25,7 +25,7 @@
 
 /* Links withing the app */
 .App-link {
-  color: #F7E3E8;
+  color: #FEF1F4;
 }
 
 /* ========================================
@@ -96,7 +96,7 @@
   border: 1px solid #FCDDE5;
   border-radius: 4px;
   font-size: 0.9rem;
-  background-color: #F7E3E8;
+  background-color: #FEF1F4;
 }
 
 /* Primary button styling */
@@ -135,7 +135,7 @@
 
 /* Main content container on about page */
 .about-container {
-  background-color: #F7E3E8;
+  background-color: #FEF1F4;
   padding: 50px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -156,7 +156,7 @@
 /* About page text content area */
 .about-content {
   margin-top: 30px;
-  background-color: #F7E3E8;
+  background-color: #FAEBF1;
   padding: 30px;
   border-radius: 10px;
   border: 2px solid #8596B4;

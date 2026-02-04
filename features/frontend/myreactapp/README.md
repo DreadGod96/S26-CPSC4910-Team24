@@ -23,7 +23,8 @@ As of right now, the website is only hosted locally
  - #8596B4 - dusty blue
  - #EAACBC - blush pink
  - #FCDDE5 - pale blush
- - #F5E8EB - off white
+ - #FAEBF1 - pinkish hue
+ - #FEEEEF - off white
 
 ## Notes provided by the react app
 # Getting Started with Create React App
