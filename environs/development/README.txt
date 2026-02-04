@@ -1,3 +1,2 @@
-***Folder for demos***
+***Configs for demo and testing***
 
-Push to production following successful demo && post-debug
