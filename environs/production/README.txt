@@ -1,1 +1,1 @@
-***Version release folder***
+***Configs for production release***
