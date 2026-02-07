@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "init": "npm install --prefix features/frontend/myreactapp && npm install --prefix features/about_me_svc",
+    "init": "npm install --prefix features/frontend/myreactapp && npm install --prefix features/about_service",
     "frontend": "npm start --prefix features/frontend/myreactapp", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
