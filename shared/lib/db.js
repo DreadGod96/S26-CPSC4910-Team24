@@ -8,14 +8,19 @@ const __dirname = path.dirname(__filename);
 
 //Create db connection
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const db_connection_pool = mysql.createPool({
 =======
 export const db_connection_pool = mysql.createConnection({
 >>>>>>> 6d27f18 (updated dev branch)
+=======
+export const db_connection_pool = mysql.createPool({
+>>>>>>> 048a7fe (added folder backend to hold all features, edited db.js to hold db connection configs...started working on about_service model)
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWD,
     database: process.env.DB_NAME,
+<<<<<<< HEAD
 <<<<<<< HEAD
     port: DB_PORT,
     ssl: {
@@ -25,19 +30,30 @@ export const db_connection_pool = mysql.createConnection({
     ssl: {
         ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-budle.pem')),
 >>>>>>> 6d27f18 (updated dev branch)
+=======
+    port: DB_PORT,
+    ssl: {
+        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-bundle.pem')),
+>>>>>>> 048a7fe (added folder backend to hold all features, edited db.js to hold db connection configs...started working on about_service model)
         rejectUnauthorized: true
     }, 
     waitForConnections: true,
     connectionLimit: 10,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 048a7fe (added folder backend to hold all features, edited db.js to hold db connection configs...started working on about_service model)
     maxIdle: 10,
     idleTimeout: 60000,
     queueLimit: 0,
     enableKeepAlive: true
     keepAliveInitialDelay: 0
+<<<<<<< HEAD
 =======
     queueLimit: 0,
 >>>>>>> 6d27f18 (updated dev branch)
+=======
+>>>>>>> 048a7fe (added folder backend to hold all features, edited db.js to hold db connection configs...started working on about_service model)
 });
 
 //Test connection on startup
