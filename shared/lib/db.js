@@ -7,19 +7,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //Create db connection
-export const db_connection_pool = mysql.createConnection({
+export const db_connection_pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWD,
     database: process.env.DB_NAME,
-    port: 3306,
+    port: DB_PORT,
     ssl: {
-        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-budle.pem')),
+        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-bundle.pem')),
         rejectUnauthorized: true
     }, 
     waitForConnections: true,
     connectionLimit: 10,
+    maxIdle: 10,
+    idleTimeout: 60000,
     queueLimit: 0,
+    enableKeepAlive: true
+    keepAliveInitialDelay: 0
 });
 
 //Test connection on startup
