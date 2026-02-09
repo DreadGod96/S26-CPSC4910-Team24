@@ -19,5 +19,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+<<<<<<< HEAD
 *.txt
 .env
+=======
+dev_branch_rules.txt
+>>>>>>> 780e150 (Add dev_branch_rules.txt to .gitignore)
