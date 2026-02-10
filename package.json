@@ -8,7 +8,7 @@
   },
   "scripts": {
     "init": "npm install --prefix features/frontend/myreactapp && npm install --prefix features/about_service",
-    "frontend": "npm start --prefix features/frontend/myreactapp", 
+    "frontend": "npm start --prefix features/frontend/myreactapp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +21,9 @@
   "bugs": {
     "url": "https://github.com/DreadGod96/S26-CPSC4910-Team24/issues"
   },
-  "homepage": "https://github.com/DreadGod96/S26-CPSC4910-Team24#readme"
+  "homepage": "https://github.com/DreadGod96/S26-CPSC4910-Team24#readme",
+  "dependencies": {
+    "dotenv": "^17.2.4",
+    "mysql2": "^3.16.3"
+  }
 }

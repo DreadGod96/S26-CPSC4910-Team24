@@ -1,5 +1,5 @@
 //Call DB
-import { db_connection_pool } from '../../../../shared/lib/db.js'
+import { db_connection_pool } from '../../../../../shared/lib/db.js'
 
 //Get row data for about page
 export const get_about_data = async () => {

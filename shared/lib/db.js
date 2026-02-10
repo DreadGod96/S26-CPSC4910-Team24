@@ -12,17 +12,17 @@ export const db_connection_pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWD,
     database: process.env.DB_NAME,
-    port: DB_PORT,
+    port: process.env.DB_PORT,
     ssl: {
-        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-bundle.pem')),
-        rejectUnauthorized: true
+//        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-bundle.pem')),
+        rejectUnauthorized: false
     }, 
     waitForConnections: true,
     connectionLimit: 10,
     maxIdle: 10,
     idleTimeout: 60000,
     queueLimit: 0,
-    enableKeepAlive: true
+    enableKeepAlive: true,
     keepAliveInitialDelay: 0
 });
 
@@ -34,5 +34,6 @@ export const test_connection = async () => {
         connection.release();
     } catch (err) {
         console.error('Connection failed: ', err.message);
+        throw err;
     }
 };
