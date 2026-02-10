@@ -1,0 +1,16 @@
+#DB
+DB_HOST='aws db url goes here'
+DB_USER=user123
+DB_PASSWD=pass123
+DB_NAME=Team24_DB_DEV
+DB_PORT=3306
+SSL_CERT= '../../certs/global-bundle.pem'
+
+#FE
+FRONTEND_URL='http://localhost:3000'
+
+#BE
+ABOUT_PORT=3001
+NODE_ENV='development'
+
+
