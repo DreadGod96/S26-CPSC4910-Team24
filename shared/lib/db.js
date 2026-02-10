@@ -22,7 +22,7 @@ export const db_connection_pool = mysql.createPool({
     maxIdle: 10,
     idleTimeout: 60000,
     queueLimit: 0,
-    enableKeepAlive: true
+    enableKeepAlive: true,
     keepAliveInitialDelay: 0
 });
 
