@@ -3,7 +3,6 @@ call add_user(
 'Nolen',
 'Schnabel',
 'admin',
-current_date(),
 '000-000-0000',
 'nschnab@clemson.edu',
 1,
@@ -23,3 +22,13 @@ insert into Company (
     'US-East',
     '864-656-0000'
 );
+
+call submit_application (
+	1,
+    'Apply to Company Program',
+    1,
+    @status_code,
+    @application_ID
+);
+
+select * from Application;
