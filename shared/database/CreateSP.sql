@@ -7,7 +7,6 @@ create procedure add_user(
 	in input_user_fname varchar(30),
 	in input_user_lname varchar(30),
 	in input_user_role varchar(30),
-	in input_user_join_date date,
 	in input_user_phone varchar(30),
 	in input_user_email varchar(30),
 	in input_company_ID int,
@@ -24,7 +23,7 @@ begin
         user_email
     ) values (
 		input_user_role,
-        input_user_join_date,
+        current_date(),
         input_company_ID,
         input_username,
         input_user_fname,

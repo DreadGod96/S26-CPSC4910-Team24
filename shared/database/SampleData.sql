@@ -3,7 +3,6 @@ call add_user(
 'Nolen',
 'Schnabel',
 'admin',
-current_date(),
 '000-000-0000',
 'nschnab@clemson.edu',
 1,
