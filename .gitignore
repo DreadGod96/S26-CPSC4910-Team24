@@ -20,3 +20,4 @@ yarn-debug.log*
 yarn-error.log*
 
 **.env*
+features/about_service/package-lock.json
