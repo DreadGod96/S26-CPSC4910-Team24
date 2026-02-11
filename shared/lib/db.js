@@ -14,8 +14,8 @@ export const db_connection_pool = mysql.createPool({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
     ssl: {
-//        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-bundle.pem')),
-        rejectUnauthorized: false
+        ca: fs.readFileSync(path.resolve(__dirname, '../certs/global-bundle.pem')),
+        rejectUnauthorized: true
     }, 
     waitForConnections: true,
     connectionLimit: 10,
