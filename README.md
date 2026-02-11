@@ -4,9 +4,25 @@ Good (Truck) Driver Incentive Program
 # Website
 The website was built using React.
 
-Prerequisites: node.js
+Prerequisites: 
+         node.js
+         .env properly configured in /environs/development
+         AWS DB SSL Cert
+         
+How to start the backend:
+1. Navigate to
 
-How to start the website:
+         "/features/backend/about_service"
+
+3. Install dependencies:
+   
+         "npm install"
+   
+5. Start localhost-DB connection:
+
+         "npm start"
+    
+How to start the frontend:
 1. Navigate to
 
          "/features/frontend/myreactapp"
