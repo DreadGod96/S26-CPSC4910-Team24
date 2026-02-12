@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import DriverApplicationForm from './components/DriverApplicationForm';
 
 function App() {
   return (
@@ -15,6 +15,9 @@ function App() {
             <li>
               <a href="/about">About</a>
             </li>
+            <li>
+              <a href="/apply">Apply as Driver</a>
+            </li>
           </ul>
           <div className="rightNav">
             <input type="text" name="search" id="search" />
@@ -25,12 +28,12 @@ function App() {
       <Routes>
         <Route path="/" element={<About />} />
         <Route path="/about" element={<About />} />
+        <Route path="/apply" element={<DriverApplicationForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
 
 function About() {
   return (
