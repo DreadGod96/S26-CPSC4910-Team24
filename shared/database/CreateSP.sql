@@ -98,3 +98,30 @@ create procedure submit_application(
     set out_application_ID = LAST_INSERT_ID();
 end $$
 delimiter ;
+
+drop procedure if exists get_user_by_email;
+delimiter $$
+create procedure get_user_by_email (
+	in input_email varchar(30),
+    out output_user_email int
+)
+begin
+	select user_ID
+    into output_user_email
+    from User
+    where user_email like input_email;
+end $$
+delimiter ;
+
+drop procedure if exists get_company_id_by_name;
+delimiter $$
+create procedure get_company_id_by_name(
+	in input_name varchar(30),
+    out output_company_ID int
+) begin
+	select company_ID
+    into output_company_ID
+    from Company
+    where company_name like input_name;
+end $$
+delimiter ;

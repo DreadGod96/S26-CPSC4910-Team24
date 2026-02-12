@@ -57,3 +57,35 @@ export const submit_application = async (driver_ID, application_title, company_I
         connection.release();
     }
 };
+
+export const get_user_by_email = async (email) => {
+    const connection = await db_connection_pool.getConnection();
+    try {
+        const [results] = await connection.execute(
+            `CALL get_user_by_email(?)`, 
+            [email]
+        );
+        return results[0][0]; // Assuming the stored procedure returns a single user
+    } catch (err) {
+        console.error("Error fetching user by email:", err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+export const get_company_id_by_name = async (company_name) => {
+    const connection = await db_connection_pool.getConnection();
+    try {
+        const [results] = await connection.execute(
+            `CALL get_company_id_by_name(?)`, 
+            [company_name]
+        );
+        return results[0][0]?.company_ID; // Assuming the stored procedure returns a single company
+    } catch (err) {
+        console.error("Error fetching company ID by name:", err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
