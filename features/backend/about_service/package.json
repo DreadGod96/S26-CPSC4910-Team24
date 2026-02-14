@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "test": "jest --watchAll"
-    "test:coverage": "jest --coverage"
+    "test": "vitest run"
   },
   "author": "Eli Monroe",
   "license": "ISC",
@@ -18,7 +17,7 @@
     "mysql2": "^3.16.3"
   },
   "devDependencies": {
-    "jest": "^30.2.0",
-    "supertest": "^7.2.2"
+    "supertest": "^7.2.2",
+    "vitest": "^4.0.18"
   }
 }

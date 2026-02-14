@@ -22,3 +22,5 @@ yarn-error.log*
 **.env*
 features/about_service/package-lock.json
 features/frontend/myreactapp/package-lock.json
+
+**.pem
