@@ -1,0 +1,43 @@
+name: Backend Dev Deployment
+
+on:
+  push:
+    branches: [ "dev" ] 
+    paths:
+      - 'features/backend/**'
+
+jobs:
+  backend-test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+    #As the program becomes more robust move to backend folder and run all the servers and tests
+    - name: Install dependencies and test
+      working-directory: features/backend/about_service
+      run: | 
+        npm install
+        npm test
+
+    - name: Deploy backend to cloud
+      if: success()
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEV_HOST }}
+        username: ${{ secrets.DEV_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd ~/S26-CPSC4910-Team24/features/backend/about_service
+          git pull origin dev
+          npm install --production
+          pm2 restart about_service
+
+
+
+
