@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 import DriverApplicationForm from './components/DriverApplicationForm';
 
 function App() {
@@ -36,6 +37,27 @@ function App() {
 }
 
 function About() {
+  const [posts, setPosts] = React.useState([]);
+  const url = 'http://localhost:3001/api/about';
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        setPosts(data.posts || []);
+        console.log("Fetched about data:", data);
+        return response;
+      } catch (error) {
+        console.error("Error fetching about data:", error);
+      }
+    };
+    if(fetchAboutData()) {
+      console.log("About data fetched successfully.");
+    } else {
+      console.error("Failed to fetch about data.");
+    }
+  }, [])
   return (
     <div>
       <section className="about-section">
@@ -43,12 +65,11 @@ function About() {
           <h1>CocoDinoBytes</h1>
 
           <div className="about-content">
-            <h2>Our Team</h2>
-            <p>1. Emma Abraham</p>
-            <p>2. Ryan Beck</p>
-            <p>3. Eli Monroe</p>
-            <p>4. Nolen Schnabel</p>
-            <p>5. Sarah Tetterton</p>
+            <p><strong>Team Number:</strong> {posts?.team_num || "Unknown"}</p>
+            <p><strong>Version:</strong> {posts?.version_num || "Unknown"}</p>
+            <p><strong>Release Date:</strong> {posts?.release_date || "Unknown"}</p>
+            <p><strong>Product Name:</strong> {posts?.product_name || "Unknown"}</p>
+            <p><strong>Description:</strong> {posts?.description || "Unknown"}</p>
           </div>
         </div>
       </section>
