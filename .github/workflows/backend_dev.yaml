@@ -2,9 +2,7 @@ name: Backend Dev Deployment
 
 on:
   push:
-    branches: [ "dev" ] 
-    paths:
-      - 'features/backend/**'
+    branches: [dev] 
 
 jobs:
   backend-test-and-deploy:
