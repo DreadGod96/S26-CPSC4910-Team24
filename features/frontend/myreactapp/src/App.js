@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import DriverApplicationForm from './components/DriverApplicationForm';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -13,10 +14,13 @@ function App() {
               <img src="/hugo.jpeg" alt="hugo" />
             </div>
             <li>
-              <a href="/about">About</a>
+            < Link to="/about">About</Link>
             </li>
             <li>
-              <a href="/apply">Apply as Driver</a>
+              <Link to="/apply">Apply as Driver</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
             </li>
           </ul>
           <div className="rightNav">
@@ -29,7 +33,9 @@ function App() {
         <Route path="/" element={<About />} />
         <Route path="/about" element={<About />} />
         <Route path="/apply" element={<DriverApplicationForm />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
+        
       </Routes>
     </BrowserRouter>
   );
