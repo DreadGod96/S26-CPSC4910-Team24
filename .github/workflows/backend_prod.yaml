@@ -1,14 +1,8 @@
-name: Backend Dev Deployment
+name: Backend Prod Deployment
 
 on:
   push:
-<<<<<<< HEAD
-    branches: [ "dev" ] 
-    paths:
-      - 'features/backend/**'
-=======
-    branches: [dev] 
->>>>>>> origin/dev
+    branches: [main] 
 
 jobs:
   backend-test-and-deploy:
@@ -27,21 +21,17 @@ jobs:
         working-directory: features/backend/about_service
         run: | 
           npm install
-          npm test
 
       - name: Deploy backend to cloud
         if: success()
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_HOST }}
-          username: ${{ secrets.DEV_USER }}
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/S26-CPSC4910-Team24/features/backend/about_service
-            git pull origin dev
+            git pull origin main
             npm install --production
-<<<<<<< HEAD
             pm2 restart about_service
-=======
-            pm2 restart about_service
->>>>>>> origin/dev
+
