@@ -2,13 +2,9 @@ name: Backend Dev Deployment
 
 on:
   push:
-<<<<<<< HEAD
     branches: [ "dev" ] 
     paths:
       - 'features/backend/**'
-=======
-    branches: [dev] 
->>>>>>> origin/dev
 
 jobs:
   backend-test-and-deploy:
@@ -22,7 +18,7 @@ jobs:
         with:
           node-version: '18'
       
-      # As the program becomes more robust move to backend folder and run all the servers and tests
+      #As the program becomes more robust move to backend folder and run all the servers and tests
       - name: Install dependencies and test
         working-directory: features/backend/about_service
         run: | 
@@ -40,8 +36,4 @@ jobs:
             cd ~/S26-CPSC4910-Team24/features/backend/about_service
             git pull origin dev
             npm install --production
-<<<<<<< HEAD
             pm2 restart about_service
-=======
-            pm2 restart about_service
->>>>>>> origin/dev
