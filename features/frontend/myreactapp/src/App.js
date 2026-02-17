@@ -45,7 +45,7 @@ function About() {
       try {
         const response = await fetch(url);
         const data = await response.json();
-        setPosts(data.posts || []);
+        setPosts(data || []);
         console.log("Fetched about data:", data);
         return response;
       } catch (error) {
@@ -69,7 +69,7 @@ function About() {
             <p><strong>Version:</strong> {posts?.version_num || "Unknown"}</p>
             <p><strong>Release Date:</strong> {posts?.release_date || "Unknown"}</p>
             <p><strong>Product Name:</strong> {posts?.product_name || "Unknown"}</p>
-            <p><strong>Description:</strong> {posts?.description || "Unknown"}</p>
+            <p><strong>Description:</strong> {posts?.product_desc || "Unknown"}</p>
           </div>
         </div>
       </section>
