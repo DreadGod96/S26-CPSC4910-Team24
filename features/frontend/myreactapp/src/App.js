@@ -46,7 +46,7 @@ function About() {
   const [posts, setPosts] = React.useState([]);
 
   useEffect(() => {
-    const url = process.env.REACT_APP_ABOUT_URL || 'http://localhost:3001/api/about';
+    const url = "http://52.70.23.45:3001/api/about" || 'http://localhost:3001/api/about';
     const fetchAboutData = async () => {
       try {
         const response = await fetch(url);
