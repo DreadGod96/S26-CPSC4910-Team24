@@ -7,11 +7,9 @@ import cors from 'cors'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-//unless the .env is production use the dev .env path
-const env_path = process.env.NODE_ENV === 'production' ? '../../../../environs/production/.env' : '../../../../environs/development/.env';
+const env_path = '../../../../environs/development/.env';
 dotenv.config({ path: path.resolve(__dirname, env_path) });
 
-console.log(`Loading .env from: ${path.resolve(__dirname, env_path)}`);
 console.log(`Connecting to host: ${process.env.DB_HOST}`);
 
 
