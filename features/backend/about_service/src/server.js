@@ -20,8 +20,12 @@ const PORT = process.env.ABOUT_PORT || 3001;
 
 //Only call GETs
 const config = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    methods: ['GET']
+    origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
+             'https://dev.d2m3eh6glowwk4.amplifyapp.com',
+             'http://localhost:3000'
+             ],
+    methods: ['GET', 'OPTIONS'],
+    credentials: true
 }
 
 app.use(cors(config));
