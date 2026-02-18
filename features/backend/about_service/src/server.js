@@ -20,7 +20,10 @@ const PORT = process.env.ABOUT_PORT || 3001;
 
 //Only call GETs
 const config = {
-    origin: 'https://dev.d2m3eh6glowwk4.amplifyapp.com/' || 'https://dev.d2m3eh6glowwk4.amplifyapp.com' || 'http://localhost:3000',
+    origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
+             'https://dev.d2m3eh6glowwk4.amplifyapp.com',
+             'http://localhost:3000'
+             ],
     methods: ['GET', 'OPTIONS'],
     credentials: true
 }
