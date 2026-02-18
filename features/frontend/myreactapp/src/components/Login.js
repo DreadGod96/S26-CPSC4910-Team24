@@ -34,7 +34,7 @@ export default function Login() {
     setSuccess("Login successful! Redirecting...");
 
     setTimeout(() => {
-    navigate("/about");
+    navigate("/dashboard");
     }, 1000);
 
   };
