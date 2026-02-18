@@ -21,6 +21,8 @@ const PORT = process.env.ABOUT_PORT || 3001;
 //Only call GETs
 const config = {
     origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
+	    'https://downloadmoredpi.com/',
+	    'https://downloadmoredpi.com',
              'https://dev.d2m3eh6glowwk4.amplifyapp.com',
              'http://localhost:3000'
              ],
