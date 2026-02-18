@@ -1,18 +1,29 @@
 import * as about_model from '../models/application_model.js';
 
-//move data from sql query into a new object for use with the router
 export const post_data = async (req, res) => {
     try {
-        const { driver_ID, application_title, company_ID } = req.body;
-        const data_fields = await about_model.post_application(driver_ID, application_title, company_ID);
+        const { first_name, last_name, email, phone, application_title, company_ID } = req.body;
 
-        if (!data_fields) { 
-            return res.status(404).json({ message: 'Error in application controller' });
+        if (!first_name || !last_name || !email || !phone || !application_title || !company_ID) {
+            return res.status(400).json({ error: "Missing required fields" });
         }
 
-        res.status(200).json(data_fields);
+        const result = await about_model.create_user_and_submit_application(
+            first_name, 
+            last_name, 
+            email, 
+            phone, 
+            application_title, 
+            company_ID
+        );
+
+        res.status(201).json({ 
+            message: 'User created and application submitted successfully',
+            user_ID: result.user_ID,
+            application_ID: result.application_ID
+        });
     } catch (err) {
         console.error('Controller error: ', err.message);
-        res.status(500).json({ error: "Error pulling data from RDS" });
+        res.status(500).json({ error: err.message });
     }
 };
