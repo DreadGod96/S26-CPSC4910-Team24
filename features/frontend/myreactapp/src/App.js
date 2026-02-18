@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import DriverApplicationForm from './components/DriverApplicationForm';
 import Login from './components/Login';
+import DashBoard from "./components/DashBoard";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/apply" element={<DriverApplicationForm />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<DashBoard />} />
         <Route path="*" element={<NotFound />} />
         
       </Routes>
