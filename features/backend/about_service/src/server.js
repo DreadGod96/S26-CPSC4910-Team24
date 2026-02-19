@@ -7,11 +7,9 @@ import cors from 'cors'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-//unless the .env is production use the dev .env path
-const env_path = process.env.NODE_ENV === 'production' ? '../../../../environs/production/.env' : '../../../../environs/development/.env';
+const env_path = '../../../../environs/development/.env';
 dotenv.config({ path: path.resolve(__dirname, env_path) });
 
-console.log(`Loading .env from: ${path.resolve(__dirname, env_path)}`);
 console.log(`Connecting to host: ${process.env.DB_HOST}`);
 
 
@@ -20,8 +18,14 @@ const PORT = process.env.ABOUT_PORT || 3001;
 
 //Only call GETs
 const config = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    methods: ['GET']
+    origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
+	    'https://downloadmoredpi.com/',
+	    'https://downloadmoredpi.com',
+             'https://dev.d2m3eh6glowwk4.amplifyapp.com',
+             'http://localhost:3000'
+             ],
+    methods: ['GET', 'OPTIONS'],
+    credentials: true
 }
 
 app.use(cors(config));
