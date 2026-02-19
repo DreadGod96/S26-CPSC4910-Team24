@@ -9,7 +9,6 @@ const DriverApplicationForm = () => {
     driverPhone: '',
     applicationTitle: '',
     companyName: '',
-    motivation: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -59,12 +58,6 @@ const DriverApplicationForm = () => {
       newErrors.companyName = 'Company name is required';
     }
 
-    if (!formData.motivation.trim()) {
-      newErrors.motivation = 'Please explain why you want to join';
-    } else if (formData.motivation.trim().length < 50) {
-      newErrors.motivation = 'Please provide at least 50 characters';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -91,7 +84,7 @@ const DriverApplicationForm = () => {
           email: formData.driverEmail,
           phone: formData.driverPhone,
           application_title: formData.applicationTitle,
-          company_ID: formData.companyName,
+          company_ID: formData.companyName
         }),
       });
 
@@ -109,7 +102,6 @@ const DriverApplicationForm = () => {
           driverPhone: '',
           applicationTitle: '',
           companyName: '',
-          motivation: ''
         });
       } else {
         const errorData = await response.json();
@@ -262,27 +254,6 @@ const DriverApplicationForm = () => {
               />
               {errors.applicationTitle && (
                 <span className="error-message">{errors.applicationTitle}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="motivation">
-                Why do you want to join this program? <span className="required">*</span>
-              </label>
-              <textarea
-                id="motivation"
-                name="motivation"
-                value={formData.motivation}
-                onChange={handleChange}
-                className={errors.motivation ? 'error' : ''}
-                placeholder="Tell us about your driving experience and why you want to join this incentive program (minimum 50 characters)"
-                rows="5"
-              />
-              <span className="character-count">
-                {formData.motivation.length} characters
-              </span>
-              {errors.motivation && (
-                <span className="error-message">{errors.motivation}</span>
               )}
             </div>
           </div>
