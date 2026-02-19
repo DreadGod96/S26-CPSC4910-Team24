@@ -24,7 +24,7 @@ insert into Company (
 );
 
 call submit_application (
-	11,
+	1,
     'Apply to Company Program',
     1,
     @status_code,
@@ -32,4 +32,3 @@ call submit_application (
 );
 
 select * from Application;
-select * from User;

@@ -80,14 +80,14 @@ create procedure submit_application(
 	end if;
     
     -- Get sponsor id from company table
-    select user_ID into input_sponsor_id from Company where company_ID = input_company_ID limit 1;
+    select sponsor_ID into input_sponsor_id from Company where company_ID = input_company_ID limit 1;
     
 	insert into Application (
 		driver_ID,
         sponsor_ID,
         application_status,
         application_date,
-        application_name
+        application_title
     ) values (
 		input_driver_id,
         input_sponsor_ID,

@@ -6,16 +6,12 @@ export const add_user = async (username, first_name, last_name, role, phone, ema
     
     try {
         const [results] = await connection.execute(
-            `CALL add_user(?, ?, ?, ?, ?, ?, ?, @out_user_ID)`, 
+            `CALL add_user(?, ?, ?, ?, ?, ?, ?)`, 
             [username, first_name, last_name, role, phone, email, company_ID]
-        );
-
-        const [outParams] = await connection.execute(
-            `SELECT @out_user_ID as user_ID`
         );
         
         // Extract the returned user_ID from results
-        const user_ID = outParams[0]?.user_ID;
+        const user_ID = results[0]?.user_ID;
         return user_ID;
     } catch (err) {
         console.error("Error adding user:", err.message);
@@ -31,25 +27,15 @@ export const submit_application = async (driver_ID, application_title, company_I
     
     try {
         const [results] = await connection.execute(
-            `CALL submit_application(?, ?, ?, @status_code, @out_application_ID)`, 
+            `CALL submit_application(?, ?, ?)`, 
             [driver_ID, application_title, company_ID]
         );
         
-        // Retrieve the OUT parameters
-        const [outParams] = await connection.execute(
-            `SELECT @status_code as status_code, @out_application_ID as application_ID`
-        );
-        
-        const status_code = outParams[0]?.status_code;
-        const application_ID = outParams[0]?.application_ID;
+        const application_ID = results[0]?.application_ID;
+        const status_code = results[0]?.status_code;
         
         if (status_code !== 1) {
-            const errorMessages = {
-                2: "Invalid driver ID",
-                3: "Invalid sponsor",
-                4: "Invalid company ID"
-            };
-            throw new Error(errorMessages[status_code] || `Application submission failed with status code: ${status_code}`);
+            throw new Error("Application submission failed with status code: " + status_code);
         }
         
         return application_ID;
