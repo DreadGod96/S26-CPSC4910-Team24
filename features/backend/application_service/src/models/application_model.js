@@ -1,10 +1,11 @@
 //Call DB
-import { submit_application } from '../../../../../shared/lib/storedProcedures.js'
+import { getPool } from '../../../../../shared/lib/db.js'
 
 //Get row data for about page
-export const post_application = async (driver_ID, application_title, company_ID) => {
+export const get_about = async () => {
     try {
-        const rows = await submit_application(driver_ID, application_title, company_ID);
+        const [rows] = await getPool().query(
+            'SELECT team_num, version_num, release_date, product_name, product_desc FROM About_Page');
 
         return rows[0] || null;
 

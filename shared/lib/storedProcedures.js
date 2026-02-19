@@ -1,8 +1,19 @@
-import { getPool } from './db.js';
-    
+import { db_connection_pool } from './db.js';
+
+export const connect_to_database = async () => {
+    try {
+        const connection = await db_connection_pool.getConnection();
+        console.log("Database connection established.");
+        return connection;
+    } catch (err) {
+        console.error("Error connecting to database:", err.message);
+        throw err;
+    }
+};
+
 // Add User to database
 export const add_user = async (username, first_name, last_name, role, phone, email, company_ID) => {
-    const connection = await getPool().getConnection();
+    const connection = await db_connection_pool.getConnection();
     
     try {
         const [results] = await connection.execute(
@@ -23,7 +34,7 @@ export const add_user = async (username, first_name, last_name, role, phone, ema
 
 // Submit Application
 export const submit_application = async (driver_ID, application_title, company_ID) => {
-    const connection = await getPool().getConnection();
+    const connection = await db_connection_pool.getConnection();
     
     try {
         const [results] = await connection.execute(
