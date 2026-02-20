@@ -98,3 +98,21 @@ create procedure submit_application(
     set out_application_ID = LAST_INSERT_ID();
 end $$
 delimiter ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS get_company_list$$
+CREATE PROCEDURE get_company_list()
+BEGIN
+    SELECT company_name FROM Company;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS get_company_id_by_name$$
+CREATE PROCEDURE get_company_id_by_name(
+	in input_company_name varchar(30)
+)
+BEGIN
+    SELECT company_ID FROM Company where company_name like input_company_name limit 1;
+END$$
+DELIMITER ;

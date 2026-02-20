@@ -1,12 +1,11 @@
 //Call DB
-import { submit_application, add_user } from '../../../../../shared/lib/storedProcedures.js'
+import { submit_application, get_company_list as get_company_list_sp , get_company_id_by_name as get_company_id_by_name_sp} from '../../../../../shared/lib/storedProcedures.js'
 
-//Get row data for about page
 export const post_application = async (driver_ID, application_title, company_ID) => {
     try {
-        const rows = await submit_application(driver_ID, application_title, company_ID);
+        const result = await submit_application(driver_ID, application_title, company_ID);
 
-        return rows[0] || null;
+        return result;
 
     } catch (err) {
         console.error('Model error: ', err.message);
@@ -14,31 +13,23 @@ export const post_application = async (driver_ID, application_title, company_ID)
     }
 };
 
-
-export const create_user_and_submit_application = async (first_name, last_name, email, phone, application_title, company_ID) => {
+export const get_company_list = async () => {
     try {
-        // Step 1: Add user to database
-        const username = first_name[0] + last_name;
-        const driver_ID = await add_user(username, first_name, last_name, 'DRIVER', phone, email, company_ID);
-        
-        if (!driver_ID) {
-            throw new Error("Failed to create user");
-        }
-
-        // Step 2: Submit application with newly created driver ID
-        const application_ID = await submit_application(driver_ID, application_title, company_ID);
-
-        if (!application_ID) {
-            throw new Error("Failed to submit application");
-        }
-
-        return {
-            user_ID: driver_ID,
-            application_ID: application_ID
-        };
-
+        const result = await get_company_list_sp();
+        return result;
     } catch (err) {
         console.error('Model error: ', err.message);
         throw err;
+    }
+};
+
+export const get_company_id_by_name = async (company_name) => {
+    try {
+        const [rows] = await get_company_id_by_name_sp(company_name);
+        return rows[0][0].company_ID;
+    } catch (err) {
+        throw err;
+    } finally {
+        connection.release();
     }
 };
