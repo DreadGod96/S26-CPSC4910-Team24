@@ -73,7 +73,7 @@ const DriverApplicationForm = () => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch('http://localhost:3002/api/application', {
+      const response = await fetch(process.env.REACT_APP_APPLICATION_URL || 'http://localhost:3002/api/application', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
