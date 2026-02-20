@@ -14,7 +14,7 @@ console.log(`Connecting to host: ${process.env.DB_HOST}`);
 
 
 const app = express();
-const PORT = process.env.APPLICATION_PORT || 3001;
+const PORT = process.env.APPLICATION_PORT || 3002;
 
 const config = {
     origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
