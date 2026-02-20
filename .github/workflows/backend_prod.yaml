@@ -17,11 +17,16 @@ jobs:
           node-version: '18'
       
       # As the program becomes more robust move to backend folder and run all the servers and tests
-      - name: Install dependencies and test
+      - name: Install about 
         working-directory: features/backend/about_service
         run: | 
           npm install
-
+          
+      - name: Install application
+        working-directory: features/backend/application_service
+        run: | 
+          npm install
+          
       - name: Deploy backend to cloud
         if: success()
         uses: appleboy/ssh-action@master
@@ -30,8 +35,14 @@ jobs:
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/S26-CPSC4910-Team24/features/backend/about_service
+            cd ~/S26-CPSC4910-Team24
             git pull origin main
+
+            cd /features/backend/about_service
             npm install --production
             pm2 restart about_service
+
+            cd ../application_service
+            npm install --production
+            pm2 restart application_service_prod
 
