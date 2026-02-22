@@ -1,0 +1,23 @@
+{
+  "name": "login_service",
+  "version": "1.0.0",
+  "description": "backend sevice for legins",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "vitest run"
+  },
+  "author": "Eli Monroe",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.17.4"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.0.18"
+  }
+}
