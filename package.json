@@ -7,10 +7,16 @@
     "doc": "docs"
   },
   "scripts": {
-    "init": "npm install --prefix features/frontend/myreactapp && npm install --prefix features/backend/about_service",
-    "backend" : "npm start --prefix features/backend/about_service",
-    "frontend": "npm start --prefix features/frontend/myreactapp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "init": {"npm install --prefix features/frontend/myreactapp",
+             " npm install --prefix features/backend/about_service",
+             "npm install --prefix features/backend/application_service",
+             " npm install --prefix features/backend/login_service"
+    },
+    "backend": {"npm start --prefix features/backend/about_service",
+                "npm start --prefix features/backend/application_service",
+                " npm start --prefix features/backend/login_service"
+    }, 
+    "frontend": "npm start --prefix features/frontend/myreactapp"
   },
   "repository": {
     "type": "git",
@@ -24,7 +30,13 @@
   },
   "homepage": "https://github.com/DreadGod96/S26-CPSC4910-Team24#readme",
   "dependencies": {
-    "dotenv": "^17.2.4",
-    "mysql2": "^3.16.3"
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.17.4"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.0.18"
   }
 }
