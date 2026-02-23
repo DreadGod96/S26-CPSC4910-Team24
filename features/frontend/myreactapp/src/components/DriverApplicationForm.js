@@ -63,7 +63,7 @@ const DriverApplicationForm = () => {
         body: JSON.stringify({
           driver_ID: formData.driver_ID,
           application_title: formData.applicationTitle,
-          company_ID: formData.companyName
+          company_name: formData.companyName
         }),
       });
 
