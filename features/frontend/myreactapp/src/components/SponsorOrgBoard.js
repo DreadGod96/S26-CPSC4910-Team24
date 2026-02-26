@@ -8,7 +8,7 @@ export default function Dashboard() {
         <p>Manage sponor users</p>
       </div>
 
-      <div className="card large">TBD</div>
+      <div className="card large">View Order history</div>
 
       <div className="card small">
         <p>
