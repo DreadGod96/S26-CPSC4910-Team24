@@ -1,4 +1,4 @@
-.login-page {
+.create-account-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -6,7 +6,7 @@
   padding-top: 80px;
 }
 
-.login-card {
+.create-account-card {
   background-color: #FEF1F4;
   width: 100%;
   max-width: 500px;
@@ -16,7 +16,7 @@
   border: 2px solid #8596B4;
 }
 
-.login-title {
+.create-account-title {
   font-family: 'Georgia', serif;
   color: #092E4C;
   font-size: 2rem;
@@ -26,13 +26,13 @@
   padding-bottom: 10px;
 }
 
-.login-form {
+.create-account-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-.login-label {
+.create-account-label {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -41,8 +41,7 @@
   font-family: 'Verdana', sans-serif;
 }
 
-
-.login-input {
+.create-account-input {
   flex: 1;
   padding: 12px;
   border: 2px solid #8596B4;
@@ -52,12 +51,12 @@
   color: #092E4C;
 }
 
-.login-input:focus {
+.create-account-input:focus {
   outline: none;
   border-color: #092E4C;
 }
 
-.login-button {
+.create-account-button {
   padding: 12px;
   background-color: #8596B4;
   color: #092E4C;
@@ -68,11 +67,43 @@
   transition: background-color 0.3s;
 }
 
-.login-button:hover {
+.create-account-button:hover {
   background-color: #EAACBC;
 }
 
-.login-error {
+.create-account-role-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Verdana', sans-serif;
+  color: #092E4C;
+}
+
+.create-account-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-account-role-options {
+  display: flex;
+  gap: 30px;
+  margin-top: 5px;
+}
+
+.create-account-role-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.create-account-radio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+.create-account-error {
   color: #092E4C;
   background-color: #EAACBC;
   padding: 8px;
@@ -80,7 +111,7 @@
   font-size: 0.9rem;
 }
 
-.login-success {
+.create-account-success {
   color: #092E4C;
   background-color: #aceac1;
   padding: 8px;
@@ -88,43 +119,3 @@
   font-size: 0.9rem;
   text-align: center;
 }
-
-.login-role {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-family: 'Verdana', sans-serif;
-  color: #092E4C;
-}
-
-.role-options {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 5px;
-}
-
-.role-options label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.login-create-account {
-  margin-top: 20px;
-  text-align: center;
-  font-family: 'Verdana', sans-serif;
-  color: #092E4C;
-}
-
-.login-create-link {
-  color: #092E4C;
-  text-decoration: underline;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.login-create-link:hover {
-  color: #EAACBC;
-}
-

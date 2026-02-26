@@ -3,6 +3,7 @@
    ======================================== */
 .App {
   text-align: center;
+  padding-top: 80px;
 }
 
 /* App logo image */
@@ -33,6 +34,12 @@
    ======================================== */
 /* Main navbar container - horizontal bar at top */
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
