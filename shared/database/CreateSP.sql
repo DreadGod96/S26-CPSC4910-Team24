@@ -4,7 +4,7 @@ drop procedure if exists add_user;
 delimiter $$
 create procedure add_user(
 	in input_username varchar(30),
-    in input_password varchar(30),
+    in input_password varchar(255),
 	in input_user_fname varchar(30),
 	in input_user_lname varchar(30),
 	in input_user_role varchar(30),
