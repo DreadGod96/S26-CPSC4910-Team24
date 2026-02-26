@@ -45,7 +45,7 @@ export default function Login({ setIsLoggedIn }) {
     if (role === "driver") {
       navigate("/dashboard");
     } else if (role === "sponsor") {
-      navigate("/dashboard"); // change later when sponsor dashboard exists
+      navigate("/orgboard"); // change later when sponsor dashboard exists
     } else if (role === "admin") {
       navigate("/dashboard"); // change later when admin dashboard exists
     }
