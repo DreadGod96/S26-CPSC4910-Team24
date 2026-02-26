@@ -6,7 +6,7 @@ export const add_user = async (username, password, first_name, last_name, role, 
     
     try {
         const [results] = await connection.execute(
-            `CALL add_user(?, ?, ?, ?, ?, ?, ?)`, 
+            `CALL add_user(?, ?, ?, ?, ?, ?, ?, ?)`, 
             [username, password, first_name, last_name, role, phone, email, company_ID]
         );
         return;

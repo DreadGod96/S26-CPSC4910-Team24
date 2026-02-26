@@ -31,7 +31,6 @@ begin
         input_user_phone,
         input_user_email
     );
-    set out_user_ID = LAST_INSERT_ID();
     
     insert into Login (
 		login_date,
@@ -39,8 +38,8 @@ begin
         password_hash,
         login_status
     ) values (
-		current_timestamp(),
-		out_user_ID,
+		current_date(),
+		LAST_INSERT_ID(),
         input_password,
         'SUCCESS'
     );

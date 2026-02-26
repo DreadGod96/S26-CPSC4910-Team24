@@ -1,12 +1,12 @@
 call add_user( 
 'nschnab',
+'banana',
 'Nolen',
 'Schnabel',
 'admin',
 '000-000-0000',
 'nschnab@clemson.edu',
-1,
-@user_ID
+1
 );
 
 select * from User;
