@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import DriverApplicationForm from './components/DriverApplicationForm';
 import Login from './components/Login';
 import DashBoard from "./components/DashBoard";
+import SponsorOrgBoard from "./components/SponsorOrgBoard";
 import CreateAccount from "./components/CreateAccount";
 
 
@@ -65,6 +66,7 @@ function App() {
         <Route path="/apply" element={<DriverApplicationForm />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/orgboard" element={<SponsorOrgBoard/>}/>
         <Route path="*" element={<NotFound />} />
         
       </Routes>
