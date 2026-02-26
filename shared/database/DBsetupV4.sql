@@ -173,6 +173,7 @@ CREATE TABLE Order_Item (
 -- Login
 CREATE TABLE Login (
   login_ID     INT NOT NULL AUTO_INCREMENT,
+  password_hash  VARCHAR(255) NOT NULL,
   login_date   DATE NOT NULL,
   user_ID      INT NOT NULL,
   login_status VARCHAR(50) NOT NULL,
