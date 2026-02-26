@@ -47,7 +47,7 @@ export default function Login({ setIsLoggedIn }) {
     } else if (role === "sponsor") {
       navigate("/orgboard"); // change later when sponsor dashboard exists
     } else if (role === "admin") {
-      navigate("/dashboard"); // change later when admin dashboard exists
+      navigate("/adboard"); // change later when admin dashboard exists
     }
 
   }, 1000);
