@@ -6,6 +6,7 @@ import DriverApplicationForm from './components/DriverApplicationForm';
 import Login from './components/Login';
 import DashBoard from "./components/DashBoard";
 import SponsorOrgBoard from "./components/SponsorOrgBoard";
+import AdminBoard from "./components/AdminBoard";
 import CreateAccount from "./components/CreateAccount";
 
 
@@ -67,6 +68,7 @@ function App() {
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/orgboard" element={<SponsorOrgBoard/>}/>
+        <Route path="/adboard" element={<AdminBoard/>}/>
         <Route path="*" element={<NotFound />} />
         
       </Routes>
