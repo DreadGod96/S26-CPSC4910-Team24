@@ -4,13 +4,13 @@ drop procedure if exists add_user;
 delimiter $$
 create procedure add_user(
 	in input_username varchar(30),
+    in input_password varchar(30),
 	in input_user_fname varchar(30),
 	in input_user_lname varchar(30),
 	in input_user_role varchar(30),
 	in input_user_phone varchar(30),
 	in input_user_email varchar(30),
-	in input_company_ID int,
-	out out_user_ID int)
+	in input_company_ID int)
 begin
 	insert into User (
 		user_role,
@@ -32,6 +32,18 @@ begin
         input_user_email
     );
     set out_user_ID = LAST_INSERT_ID();
+    
+    insert into Login (
+		login_date,
+        user_ID,
+        password_hash,
+        login_status
+    ) values (
+		current_timestamp(),
+		out_user_ID,
+        input_password,
+        'SUCCESS'
+    );
 end $$
 delimiter ;
 

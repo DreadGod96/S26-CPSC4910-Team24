@@ -1,22 +1,15 @@
 import { getPool } from './db.js';
     
 // Add User to database
-export const add_user = async (username, first_name, last_name, role, phone, email, company_ID) => {
+export const add_user = async (username, password, first_name, last_name, role, phone, email, company_ID) => {
     const connection = await getPool().getConnection();
     
     try {
         const [results] = await connection.execute(
-            `CALL add_user(?, ?, ?, ?, ?, ?, ?, @out_user_ID)`, 
-            [username, first_name, last_name, role, phone, email, company_ID]
+            `CALL add_user(?, ?, ?, ?, ?, ?, ?)`, 
+            [username, password, first_name, last_name, role, phone, email, company_ID]
         );
-
-        const [outParams] = await connection.execute(
-            `SELECT @out_user_ID as user_ID`
-        );
-        
-        // Extract the returned user_ID from results
-        const user_ID = outParams[0]?.user_ID;
-        return user_ID;
+        return;
     } catch (err) {
         console.error("Error adding user:", err.message);
         throw err;

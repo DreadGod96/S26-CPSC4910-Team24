@@ -34,5 +34,6 @@ call submit_application (
 select * from Application;
 select * from User;
 select * from Company;
+select * from Login;
 
 call get_company_list();
