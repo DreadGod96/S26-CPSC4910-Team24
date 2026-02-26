@@ -1,10 +1,13 @@
 import { getPool } from '../../../../../shared/lib/db.js';
-import { add_user } from '../../../../../shared/lib/storedProcedures.js';
-const findUser = async (email) => {
-    try {
 
-        const sql_cmd = `SELECT * FROM users WHERE user_email = ?`;
-        const [rows] = await getPool().query(sql_cmd, [email]);
+export const findUser = async (user_email) => {
+    try {
+        const sql_cmd = `
+        SELECT u.user_ID,  u.user_email, u.user_role, l.password_hash
+        FROM user u  JOIN login l ON u.user_ID = l.user_ID
+        WHERE u.user_email = ?`;
+        
+        const [rows] = await getPool().query(sql_cmd, [user_email]);
         return rows[0] || null;
     
     } catch (err) {
@@ -12,10 +15,3 @@ const findUser = async (email) => {
         throw err;
     }
 };
-
-const Authenticate = {
-    findUser,
-};
-
-export default Authenticate;
-
