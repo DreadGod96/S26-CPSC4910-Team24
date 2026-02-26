@@ -1,0 +1,12 @@
+frontend-test:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    - name: Install and test frontend
+      working-directory: features/frontend/myreactapp
+      run: |
+        npm install
+        npm test -- --watchAll=false --coverage

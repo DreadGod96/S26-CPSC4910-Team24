@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DriverApplicationForm.css';
 
 const DriverApplicationForm = () => {
   const [formData, setFormData] = useState({
-    driverFirstName: '',
-    driverLastName: '',
-    driverEmail: '',
-    driverPhone: '',
+    driver_ID: '',
     applicationTitle: '',
     companyName: '',
   });
@@ -14,6 +11,7 @@ const DriverApplicationForm = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [companies, setCompanies] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,24 +28,8 @@ const DriverApplicationForm = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.driverFirstName.trim()) {
-      newErrors.driverFirstName = 'First name is required';
-    }
-
-    if (!formData.driverLastName.trim()) {
-      newErrors.driverLastName = 'Last name is required';
-    }
-
-    if (!formData.driverEmail.trim()) {
-      newErrors.driverEmail = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.driverEmail)) {
-      newErrors.driverEmail = 'Please enter a valid email address';
-    }
-
-    if (!formData.driverPhone.trim()) {
-      newErrors.driverPhone = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(formData.driverPhone.replace(/[-\s()]/g, ''))) {
-      newErrors.driverPhone = 'Please enter a valid 10-digit phone number';
+    if (!formData.driver_ID.trim()) {
+      newErrors.driver_ID = 'Driver ID is required';
     }
 
     if (!formData.applicationTitle.trim()) {
@@ -73,18 +55,15 @@ const DriverApplicationForm = () => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch(process.env.REACT_APP_APPLICATION_URL || 'http://localhost:3002/api/application', {
+      const response = await fetch('http://localhost:3002/api/application', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          first_name: formData.driverFirstName,
-          last_name: formData.driverLastName,
-          email: formData.driverEmail,
-          phone: formData.driverPhone,
+          driver_ID: formData.driver_ID,
           application_title: formData.applicationTitle,
-          company_ID: formData.companyName
+          company_name: formData.companyName
         }),
       });
 
@@ -96,10 +75,7 @@ const DriverApplicationForm = () => {
         });
         // Reset form
         setFormData({
-          driverFirstName: '',
-          driverLastName: '',
-          driverEmail: '',
-          driverPhone: '',
+          driver_ID: '',
           applicationTitle: '',
           companyName: '',
         });
@@ -121,6 +97,28 @@ const DriverApplicationForm = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await fetch('http://localhost:3002/api/application/companylist');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Raw response data:', data);
+        
+        let companyList = Array.isArray(data[0]) ? data[0] : [];
+        console.log('Processed company list:', companyList);
+        setCompanies(companyList);
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+        setCompanies([]);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
   return (
     <div className="driver-application-container">
       <div className="application-form-wrapper">
@@ -139,79 +137,23 @@ const DriverApplicationForm = () => {
           {/* Personal Information Section */}
           <div className="form-section">
             <h2 className="section-title">Personal Information</h2>
-            
-            <div className="form-row">
+
+            <div className="form-section">
               <div className="form-group">
-                <label htmlFor="driverFirstName">
-                  First Name <span className="required">*</span>
+                <label htmlFor="driver_ID">
+                  Driver ID <span className="required">*</span>
                 </label>
                 <input
                   type="text"
-                  id="driverFirstName"
-                  name="driverFirstName"
-                  value={formData.driverFirstName}
+                  id="driver_ID"
+                  name="driver_ID"
+                  value={formData.driver_ID}
                   onChange={handleChange}
-                  className={errors.driverFirstName ? 'error' : ''}
-                  placeholder="Enter your first name"
+                  className={errors.driver_ID ? 'error' : ''}
+                  placeholder="Your unique driver ID"
                 />
-                {errors.driverFirstName && (
-                  <span className="error-message">{errors.driverFirstName}</span>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="driverLastName">
-                  Last Name <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="driverLastName"
-                  name="driverLastName"
-                  value={formData.driverLastName}
-                  onChange={handleChange}
-                  className={errors.driverLastName ? 'error' : ''}
-                  placeholder="Enter your last name"
-                />
-                {errors.driverLastName && (
-                  <span className="error-message">{errors.driverLastName}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="driverEmail">
-                  Email Address <span className="required">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="driverEmail"
-                  name="driverEmail"
-                  value={formData.driverEmail}
-                  onChange={handleChange}
-                  className={errors.driverEmail ? 'error' : ''}
-                  placeholder="your.email@example.com"
-                />
-                {errors.driverEmail && (
-                  <span className="error-message">{errors.driverEmail}</span>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="driverPhone">
-                  Phone Number <span className="required">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="driverPhone"
-                  name="driverPhone"
-                  value={formData.driverPhone}
-                  onChange={handleChange}
-                  className={errors.driverPhone ? 'error' : ''}
-                  placeholder="(555) 123-4567"
-                />
-                {errors.driverPhone && (
-                  <span className="error-message">{errors.driverPhone}</span>
+                {errors.driver_ID && (
+                  <span className="error-message">{errors.driver_ID}</span>
                 )}
               </div>
             </div>
@@ -225,15 +167,24 @@ const DriverApplicationForm = () => {
               <label htmlFor="companyName">
                 Company/Sponsor Name <span className="required">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 id="companyName"
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleChange}
                 className={errors.companyName ? 'error' : ''}
-                placeholder="Name of the company you want to join"
-              />
+              >
+                <option value="">-- Select a Company --</option>
+                {companies && companies.length > 0 ? (
+                  companies.map((company, index) => (
+                    <option key={index} value={company.company_name || ''}>
+                      {company.company_name || 'Unknown Company'}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No companies available</option>
+                )}
+              </select>
               {errors.companyName && (
                 <span className="error-message">{errors.companyName}</span>
               )}

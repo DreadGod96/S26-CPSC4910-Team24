@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import DriverApplicationForm from './components/DriverApplicationForm';
 import Login from './components/Login';
 import DashBoard from "./components/DashBoard";
+import SponsorOrgBoard from "./components/SponsorOrgBoard";
+import SponsorUserBoard from "./components/SponsorUserBoard";
+import AdminBoard from "./components/AdminBoard";
+import CreateAccount from "./components/CreateAccount";
 
-function App() {
+
+function AppWrapper() {
   return (
     <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}
+function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    navigate("/about");
+  };
+
+  return (
+    <>
       <div className="App">
         <nav className="navbar background">
           <ul className="nav-list">
@@ -21,9 +43,17 @@ function App() {
             <li>
               <Link to="/apply">Apply as Driver</Link>
             </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
+              {!isLoggedIn ? (
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+              ) : (
+                <li>
+                  <button className="btn btn-sm" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </li>
+              )}
           </ul>
           <div className="rightNav">
             <input type="text" name="search" id="search" />
@@ -34,13 +64,17 @@ function App() {
       <Routes>
         <Route path="/" element={<About />} />
         <Route path="/about" element={<About />} />
+        <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/apply" element={<DriverApplicationForm />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/orgboard" element={<SponsorOrgBoard/>}/>
+        <Route path="/sponsboard" element={<SponsorUserBoard/>}/>
+        <Route path="/adboard" element={<AdminBoard/>}/>
         <Route path="*" element={<NotFound />} />
         
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
@@ -89,4 +123,4 @@ function NotFound() {
   return <h1>404 - Page Not Found</h1>;
 }
 
-export default App;
+export default AppWrapper;

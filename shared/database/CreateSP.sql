@@ -4,13 +4,13 @@ drop procedure if exists add_user;
 delimiter $$
 create procedure add_user(
 	in input_username varchar(30),
+    in input_password varchar(30),
 	in input_user_fname varchar(30),
 	in input_user_lname varchar(30),
 	in input_user_role varchar(30),
 	in input_user_phone varchar(30),
 	in input_user_email varchar(30),
-	in input_company_ID int,
-	out out_user_ID int)
+	in input_company_ID int)
 begin
 	insert into User (
 		user_role,
@@ -31,7 +31,18 @@ begin
         input_user_phone,
         input_user_email
     );
-    set out_user_ID = LAST_INSERT_ID();
+    
+    insert into Login (
+		login_date,
+        user_ID,
+        password_hash,
+        login_status
+    ) values (
+		current_date(),
+		LAST_INSERT_ID(),
+        input_password,
+        'SUCCESS'
+    );
 end $$
 delimiter ;
 
@@ -98,3 +109,21 @@ create procedure submit_application(
     set out_application_ID = LAST_INSERT_ID();
 end $$
 delimiter ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS get_company_list$$
+CREATE PROCEDURE get_company_list()
+BEGIN
+    SELECT company_name FROM Company;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS get_company_id_by_name$$
+CREATE PROCEDURE get_company_id_by_name(
+	in input_company_name varchar(30)
+)
+BEGIN
+    SELECT company_ID FROM Company where company_name like input_company_name limit 1;
+END$$
+DELIMITER ;
