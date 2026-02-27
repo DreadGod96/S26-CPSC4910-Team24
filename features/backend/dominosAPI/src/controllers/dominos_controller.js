@@ -1,16 +1,20 @@
 import * as dominos_model from '../models/dominos_model.js';
 
-export async function getDominosMenuItems(address) {
+export async function getDominosMenu(req, res) {
   try {
-    const items = await dominos_model.getDominosMenuItems(address);
+    const { street, city, region, postalCode } = req.body;
 
-    for (const [category, products] of Object.entries(items)) {
-      console.log(`\n📦 ${category}`);
-      for (const item of products) {
-        console.log(`  - [${item.code}] ${item.name}${item.price ? ` — $${item.price}` : ''}`);
-      }
+    if (!street || !city || !region || !postalCode) {
+      return res.status(400).json({
+        error: 'Missing required address fields: street, city, region, postalCode',
+      });
     }
+
+    const result = await dominos_model.getDominosMenu({ street, city, region, postalCode });
+
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error fetching menu:', err.message);
+    return res.status(500).json({ error: err.message });
   }
-};
+}

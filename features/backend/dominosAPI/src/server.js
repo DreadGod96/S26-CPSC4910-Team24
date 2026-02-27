@@ -14,7 +14,7 @@ console.log(`Connecting to host: ${process.env.DB_HOST}`);
 
 
 const app = express();
-const PORT = process.env.APPLICATION_PORT || 3003;
+const PORT = process.env.DOMINOS_PORT || 3003;
 
 const config = {
     origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
@@ -30,7 +30,7 @@ const config = {
 app.use(cors(config));
 app.use(express.json());
 
-const { default: application_routes } = (await import('./routes/dominos_routes.js'));
+const { default: application_routes } = (await import('./routes/dominos_route.js'));
 app.use('/api/dominos', application_routes);
 
 app.listen(PORT, async () => {
