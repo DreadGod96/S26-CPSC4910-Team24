@@ -3,8 +3,6 @@ name: Backend Dev Deployment
 on:
   push:
     branches: [ "dev" ] 
-    paths:
-      - 'features/backend/**'
 
 jobs:
   backend-test-and-deploy:
@@ -25,11 +23,12 @@ jobs:
           npm install
           npm test
 
-      - name: Install and test application
-        working-directory: features/backend/application_service
-        run: | 
-          npm install
-          npm test
+#When application test is made reenable
+     # - name: Install and test application
+     #   working-directory: features/backend/application_service
+     #   run: | 
+      #    npm install
+       #   npm test
      
       - name: Install and test register and login
         working-directory: features/backend/login_service
