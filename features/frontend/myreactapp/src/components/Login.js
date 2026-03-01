@@ -13,18 +13,12 @@ export default function Login({ setIsLoggedIn }) {
 
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
         setSuccess("");
         setError("Please fill in all fields.");
-        return;
-    }
-
-    if (!email.includes("@")) {
-        setSuccess("");
-        setError("Please enter a valid email address.");
         return;
     }
 
@@ -34,25 +28,31 @@ export default function Login({ setIsLoggedIn }) {
         return;
     }
 
-    // Frontend-only for now:
-    console.log({ email, password, role });
-    setSuccess("Login successful! Redirecting...");
+    try {
+        const response = await fetch("http://localhost:3003/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
 
-    setIsLoggedIn(true);
+        const data = await response.json();
 
-    setTimeout(() => {
-
-    if (role === "driver") {
-      navigate("/dashboard");
-    } else if (role === "sponsor") {
-      navigate("/orgboard"); // change later when sponsor dashboard exists
-    } else if (role === "admin") {
-      navigate("/adboard"); // change later when admin dashboard exists
-    }
-
-  }, 1000);
-
-  };
+        if (response.ok) {
+            setSuccess("Login successful! Redirecting...");
+            setIsLoggedIn(true);
+            setTimeout(() => {
+                if (role === "driver") { navigate("/dashboard"); } 
+                else if (role === "sponsor") { navigate("/orgboard"); }
+                else if (role === "admin") { navigate("/adboard"); }
+                }, 1000);
+            }
+            else {
+                setError(data.error || "Login failed.");
+            }
+    } catch (err) {
+        setError("Server connection failed.");
+        }
+}
 
   return (
     <div className="login-page">
