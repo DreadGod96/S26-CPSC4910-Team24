@@ -1,7 +1,11 @@
+
+import dotenv from 'dotenv';
 import { describe, it, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../src/server.js';
 import { getPool } from '../../../../shared/lib/db.js'; 
+
+dotenv.config();
 
 describe('Login Service API Tests', () => {
   const testUser = {
