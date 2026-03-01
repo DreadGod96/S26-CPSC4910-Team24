@@ -33,8 +33,8 @@ export default function CreateAccount() {
     return;
     }
 
-    try {
-        const response = await fetch("http://localhost:3003/api/register", {
+    try { 
+        const response = await fetch("http://tigerpoints-dev.duckdns.org/api/register", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
