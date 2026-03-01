@@ -10,6 +10,14 @@ import { getPool } from '../../../../shared/lib/db.js';
 const envPath = path.resolve(__dirname, '../../../../environs/development/.env');
 
 dotenv.config({ path: envPath });
+
+console.log("Current Directory:", __dirname);
+console.log("Attempting to load .env from:", envPath);
+console.log("DB_HOST Loaded:", process.env.DB_HOST || "NOT FOUND");
+
+if (!process.env.DB_HOST) {
+    throw new Error("FATAL: Environment variables not loaded. Tests cannot connect to RDS.");
+
 describe('Login Service API Tests', () => {
   const testUser = {
     email: 'test_unit@clemson.edu',
