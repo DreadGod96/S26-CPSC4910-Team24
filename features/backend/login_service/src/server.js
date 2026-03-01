@@ -45,3 +45,6 @@ app.listen(PORT, async () => {
         console.error("Server started, but DB is unreachable.");
     }
 });
+
+
+export default app;

@@ -28,8 +28,11 @@ export const login = async (req, res) => {
     });
 
   }catch (err) {
-    console.error("Login Controller Error: err.message");
-    res.status(500).json({ error: "Internal server error." });
+    console.error("Login Controller Error:", err.message);
+    res.status(500).json({ 
+        error: "Internal server error.",
+        details: err.message
+    });
   }
 };
 
