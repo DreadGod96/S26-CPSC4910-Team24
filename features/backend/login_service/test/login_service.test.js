@@ -7,6 +7,8 @@ import request from 'supertest';
 import app from '../src/server.js';
 import { getPool } from '../../../../shared/lib/db.js'; 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const envPath = path.resolve(__dirname, '../../../../environs/development/.env');
 
 dotenv.config({ path: envPath });
@@ -17,6 +19,7 @@ console.log("DB_HOST Loaded:", process.env.DB_HOST || "NOT FOUND");
 
 if (!process.env.DB_HOST) {
     throw new Error("FATAL: Environment variables not loaded. Tests cannot connect to RDS.");
+}
 
 describe('Login Service API Tests', () => {
   const testUser = {
