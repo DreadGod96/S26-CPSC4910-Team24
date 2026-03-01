@@ -12,18 +12,12 @@ export default function CreateAccount() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password || !confirmPassword) {
     setSuccess("");
     setError("Please fill in all fields.");
-    return;
-    }
-
-    if (!email.includes("@")) {
-    setSuccess("");
-    setError("Please enter a valid email address.");
     return;
     }
 
@@ -39,16 +33,37 @@ export default function CreateAccount() {
     return;
     }
 
-    // Frontend-only for now
-    console.log({ email, password, role });
+    try {
+        const response = await fetch("http://localhost:3003/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                email: email, 
+                password: password,
+                role: role,
+                username: email.split('@')[0],
+                first_name: "New",
+                last_name: "User",
+                phone: "000-000-0000",
+                company_ID: 1
+                }),
+        });
 
-    setError("");
-    setSuccess("Account created successfully! Redirecting...");
+        const data = await response.json();
 
-    setTimeout(() => {
-      navigate("/");
-    }, 1200);
-  };
+        if (response.ok) {
+            setSuccess("Registration successful! Redirecting...");
+            setError("");
+            setTimeout(() => navigate("/"), 1200);
+        }
+        else {
+            setError(data.error || "Registration failed.");
+            }
+    } catch (err) {
+        setError("Server connection failed.");
+        console.error("Registration error", err);
+        }
+};
 
   return (
     <div className="create-account-page">
