@@ -34,7 +34,7 @@ export default function CreateAccount() {
     }
 
     try { 
-        const response = await fetch("http://tigerpoints-dev.duckdns.org/api/register", { 
+        const response = await fetch("https://tigerpoints-dev.duckdns.org/api/register", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 

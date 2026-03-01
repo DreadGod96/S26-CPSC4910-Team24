@@ -29,7 +29,7 @@ export default function Login({ setIsLoggedIn }) {
     }
 
     try {
-        const response = await fetch("http://tigerpoints-dev.duckdns.org/api/login", { 
+        const response = await fetch("https://tigerpoints-dev.duckdns.org/api/login", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
