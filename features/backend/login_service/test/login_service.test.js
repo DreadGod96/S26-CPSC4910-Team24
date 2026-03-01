@@ -1,12 +1,15 @@
 
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { describe, it, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../src/server.js';
 import { getPool } from '../../../../shared/lib/db.js'; 
 
-dotenv.config();
+const envPath = path.resolve(__dirname, '../../../../environs/development/.env');
 
+dotenv.config({ path: envPath });
 describe('Login Service API Tests', () => {
   const testUser = {
     email: 'test_unit@clemson.edu',
