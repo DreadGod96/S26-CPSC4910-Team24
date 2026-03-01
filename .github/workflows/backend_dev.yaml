@@ -2,13 +2,9 @@ name: Backend Dev Deployment
 
 on:
   push:
-<<<<<<< HEAD
     branches: [ "dev" ] 
     paths:
       - 'features/backend/**'
-=======
-    branches: [dev] 
->>>>>>> origin/dev
 
 jobs:
   backend-test-and-deploy:
@@ -23,11 +19,24 @@ jobs:
           node-version: '18'
       
       # As the program becomes more robust move to backend folder and run all the servers and tests
-      - name: Install dependencies and test
+      - name: Install and test about
         working-directory: features/backend/about_service
         run: | 
           npm install
           npm test
+
+      - name: Install and test application
+        working-directory: features/backend/application_service
+        run: | 
+          npm install
+          npm test
+     
+      - name: Install and test register and login
+        working-directory: features/backend/login_service
+        run: | 
+          npm install
+          npm test
+          
 
       - name: Deploy backend to cloud
         if: success()
@@ -37,11 +46,17 @@ jobs:
           username: ${{ secrets.DEV_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/S26-CPSC4910-Team24/features/backend/about_service
+            cd ~/S26-CPSC4910-Team24
             git pull origin dev
+
+            cd /features/backend/about_service
             npm install --production
-<<<<<<< HEAD
-            pm2 restart about_service
-=======
-            pm2 restart about_service
->>>>>>> origin/dev
+            pm2 restart about_service_dev
+
+            cd ../application_service
+            npm install --production
+            pm2 restart application_service_dev
+
+            cd ../login_service
+            npm install --production
+            pm2 restart login_service_dev            
