@@ -11,7 +11,7 @@ const env_path = '../../../../environs/development/.env';
 dotenv.config({ path: path.resolve(__dirname, env_path) });
 
 const app = express();
-const PORT = process.env.POINTS_PORT || 3003;
+const PORT = process.env.POINTS_PORT || 3004;
 
 const config = {
     origin: [
