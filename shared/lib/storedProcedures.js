@@ -87,25 +87,27 @@ export const get_company_id_by_name = async (company_name) => {
     }
 };
 
-// Get total points for a driver
 export const get_driver_points = async (driver_ID) => {
     const connection = await getPool().getConnection();
     try {
         const [rows] = await connection.execute(
             `SELECT 
-                p.driver_ID,
-                SUM(p.point_amount) AS total_points,
+                driver_ID,
+                SUM(point_amount) AS total_points,
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
-                        'point_date', p.point_date,
-                        'point_amount', p.point_amount,
-                        'points_reason', p.points_reason,
-                        'sponsor_ID', p.sponsor_ID
+                        'point_date', point_date,
+                        'point_amount', point_amount,
+                        'points_reason', points_reason,
+                        'sponsor_ID', sponsor_ID
                     )
                 ) AS point_history
-            FROM Points p
-            WHERE p.driver_ID = ?
-            GROUP BY p.driver_ID`,
+            FROM (
+                SELECT * FROM Points
+                WHERE driver_ID = ?
+                ORDER BY point_date DESC
+            ) AS sorted_points
+            GROUP BY driver_ID`,
             [driver_ID]
         );
         return rows[0] || null;
