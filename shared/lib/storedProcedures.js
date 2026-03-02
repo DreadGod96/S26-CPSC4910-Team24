@@ -86,3 +86,33 @@ export const get_company_id_by_name = async (company_name) => {
         connection.release();
     }
 };
+
+// Get total points for a driver
+export const get_driver_points = async (driver_ID) => {
+    const connection = await getPool().getConnection();
+    try {
+        const [rows] = await connection.execute(
+            `SELECT 
+                p.driver_ID,
+                SUM(p.point_amount) AS total_points,
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'point_date', p.point_date,
+                        'point_amount', p.point_amount,
+                        'points_reason', p.points_reason,
+                        'sponsor_ID', p.sponsor_ID
+                    )
+                ) AS point_history
+            FROM Points p
+            WHERE p.driver_ID = ?
+            GROUP BY p.driver_ID`,
+            [driver_ID]
+        );
+        return rows[0] || null;
+    } catch (err) {
+        console.error("Error fetching driver points:", err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
