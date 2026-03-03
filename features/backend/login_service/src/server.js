@@ -31,7 +31,7 @@ app.use(cors(config));
 app.use(express.json());
 
 const { default: login_routes } = (await import('./routes/login_routes.js'));
-app.use('/api', login_routes);
+app.use('/', login_routes);
 
 
 const { test_connection } = await import('../../../../shared/lib/db.js');
