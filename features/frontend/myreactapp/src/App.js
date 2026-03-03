@@ -9,6 +9,7 @@ import SponsorOrgBoard from "./components/SponsorOrgBoard";
 import SponsorUserBoard from "./components/SponsorUserBoard";
 import AdminBoard from "./components/AdminBoard";
 import CreateAccount from "./components/CreateAccount";
+import Catalogue from "./components/Catalogue";
 
 
 function AppWrapper() {
@@ -43,6 +44,9 @@ function App() {
             <li>
               <Link to="/apply">Apply as Driver</Link>
             </li>
+              <li>
+              <Link to="/catalogue">Catalogue</Link>
+              </li>
               {!isLoggedIn ? (
                 <li>
                   <Link to="/login">Login</Link>
@@ -71,6 +75,7 @@ function App() {
         <Route path="/orgboard" element={<SponsorOrgBoard/>}/>
         <Route path="/sponsboard" element={<SponsorUserBoard/>}/>
         <Route path="/adboard" element={<AdminBoard/>}/>
+        <Route path="/catalogue" element={<Catalogue />} />
         <Route path="*" element={<NotFound />} />
         
       </Routes>
