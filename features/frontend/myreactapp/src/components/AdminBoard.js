@@ -1,11 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import "./DashBoard.css";
 export default function Dashboard() {
   return (
     <div className="dashboard">
       <div className="welcome">Welcome back, Admin</div>
 
-      <div className="card small">
-        <p>Manage accounts</p>
+      <div
+        className="card small"
+        onClick={() => navigate("/create-account")}
+        style={{ cursor: "pointer" }}
+      >
+        <p>Manage Accounts</p>
       </div>
 
       <div className="card large">Manage Catalogs</div>
