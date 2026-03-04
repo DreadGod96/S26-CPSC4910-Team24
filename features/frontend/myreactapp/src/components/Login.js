@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { useAuth } from "./AuthContext";
+import { useLocation } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +11,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,8 +44,11 @@ export default function Login() {
       );
 
       if (response.ok) {
+        const userData = await response.json();
+        login(userData);
         setSuccess("Login successful! Redirecting...");
-        setTimeout(() => navigate("/dashboard"), 1000);
+        const destination = location.state?.from?.pathname || "/dashboard";
+        setTimeout(() => navigate(destination, { replace: true }), 1000);
       } else {
         setError("Invalid email or password.");
       }
