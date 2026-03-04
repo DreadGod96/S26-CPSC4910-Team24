@@ -7,10 +7,11 @@
     "doc": "docs"
   },
   "scripts": {
-    "init": "npm install --prefix features/frontend/myreactapp & npm install --prefix features/backend/about_service & npm install --prefix features/backend/application_service x&& npm install --prefix features/backend/login_service",
+    "init": "npm install --prefix features/frontend/myreactapp & npm install --prefix features/backend/about_service & npm install --prefix features/backend/application_service && npm install --prefix features/backend/login_service",
     "backend": "npm start --prefix features/backend/about_service & npm start --prefix features/backend/application_service & npm start --prefix features/backend/login_service",
-    "frontend": "npm start --prefix features/frontend/myreactapp"
-  },
+    "frontend": "npm start --prefix features/frontend/myreactapp",
+    "be_fe": "npm install --prefix features/frontend/myreactapp & npm install --prefix features/backend/about_service & npm install --prefix features/backend/application_service & npm install --prefix features/backend/login_service & npm start --prefix features/backend/about_service & npm start --prefix features/backend/application_service & npm start --prefix features/backend/login_service & npm start --prefix features/frontend/myreactapp"
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DreadGod96/S26-CPSC4910-Team24.git"
