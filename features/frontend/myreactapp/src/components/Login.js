@@ -38,7 +38,7 @@ export default function Login({ setIsLoggedIn }) {
         const data = await response.json();
 
         localStorage.setItem("token", data.token);
-        localStorage.setItem("userRole", data.user.role;
+        localStorage.setItem("userRole", data.user.role);
 
         if (response.ok) {
             setSuccess("Login successful! Redirecting...");
