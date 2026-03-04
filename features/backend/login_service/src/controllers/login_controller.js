@@ -1,6 +1,9 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { findUser } from '../models/login_model.js';
 import { add_user } from '../../../../../shared/lib/storedProcedures.js';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -18,8 +21,16 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid email and/or password." });
     }
 
+    //token generation
+    const token = jwt.sign(
+        { id: user.user_id, email:user.user_email, rolw:user.user_role },
+        JWT_SECRET,
+        { expiresIn: '2h' }
+    );
+
     res.status(200).json({
       message: "Login successful",
+      token: token,
       user: {
         id: user.user_ID,
         email: user.user_email,
