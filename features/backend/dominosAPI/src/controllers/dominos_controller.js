@@ -15,6 +15,6 @@ export async function getDominosMenu(req, res) {
     return res.status(200).json(result);
   } catch (err) {
     console.error('Error fetching menu:', err.message);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: 'Failed to fetch Dominos menu. Please try again later.' });
   }
 }
