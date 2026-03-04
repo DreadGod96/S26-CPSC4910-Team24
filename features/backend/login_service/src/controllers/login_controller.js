@@ -12,13 +12,13 @@ export const login = async (req, res) => {
     const user = await findUser(email);
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid email and/or password." });
+      return res.status(401).json({ error: "Invalid email." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid email and/or password." });
+      return res.status(401).json({ error: "Invalid password." });
     }
 
     //token generation
