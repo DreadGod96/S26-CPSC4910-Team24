@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Catalogue.css";
 
-const DOMINOS_URL =
+const BASE_URL =
   process.env.REACT_APP_DOMINOS_URL ||
-  "http://localhost:3003/api/dominos/get_menu";
+  "http://localhost:3005/api/dominos";
+
+const MENU_URL = `${BASE_URL}/get_menu`;
+const ORDER_URL = `${BASE_URL}/place_order`;
 
 const PIZZA_EMOJI = ["🍕", "🧀", "🥩", "🌶️", "🫑", "🧅", "🍗", "🥓"];
 
@@ -33,41 +36,61 @@ function SkeletonGrid() {
 }
 
 export default function Catalogue() {
-  const [form, setForm] = useState({
-    street: "",
-    city: "",
-    region: "",
-    postalCode: "",
-  });
   const [menu, setMenu] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  // Per-item order state: code -> "idle" | "ordering" | "ordered" | "error"
+  const [orderState, setOrderState] = useState({});
 
-  const handleChange = (e) =>
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  useEffect(() => {
+    async function fetchMenu() {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(MENU_URL);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        setMenu(data);
+      } catch (err) {
+        setError(err.message || "Failed to load menu. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMenu();
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setMenu(null);
-    setSearch("");
+  async function handleRedeem(item) {
+    setOrderState((s) => ({ ...s, [item.code]: "ordering" }));
     try {
-      const res = await fetch(DOMINOS_URL, {
+      const res = await fetch(ORDER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          address: {
+          street: "101 Calhoun Dr",
+          city: "Clemson",
+          region: "SC",
+          postalCode: "29634",
+          },
+          items: [{ code: item.code, quantity: 1 }],
+          customer: {
+            firstName: "Tiger",
+            lastName: "Points",
+            email: "tigerpoints@clemson.edu",
+            phone: "8645550000",
+          },
+          payment: "cash",
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setMenu(data);
-    } catch (err) {
-      setError(err.message || "Failed to load menu. Please try again.");
-    } finally {
-      setLoading(false);
+      setOrderState((s) => ({ ...s, [item.code]: "ordered" }));
+    } catch {
+      setOrderState((s) => ({ ...s, [item.code]: "error" }));
     }
-  };
+  }
 
   const filtered =
     menu?.specialtyItems?.filter(
@@ -83,68 +106,9 @@ export default function Catalogue() {
         <header className="catalogue-header">
           <h1 className="catalogue-title">Domino's Menu</h1>
           <p className="catalogue-subtitle">
-            Enter your address to find the nearest store and browse the full menu
+            Nearest store to Clemson University — browse and redeem with your points
           </p>
         </header>
-
-        <form className="address-form" onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="form-field form-field--street">
-              <label className="form-label">Street</label>
-              <input
-                className="form-input"
-                name="street"
-                value={form.street}
-                onChange={handleChange}
-                placeholder="900 Clark Ave"
-                required
-              />
-            </div>
-            <div className="form-field form-field--city">
-              <label className="form-label">City</label>
-              <input
-                className="form-input"
-                name="city"
-                value={form.city}
-                onChange={handleChange}
-                placeholder="St. Louis"
-                required
-              />
-            </div>
-            <div className="form-field form-field--short">
-              <label className="form-label">State</label>
-              <input
-                className="form-input"
-                name="region"
-                value={form.region}
-                onChange={handleChange}
-                placeholder="MO"
-                maxLength={2}
-                required
-              />
-            </div>
-            <div className="form-field form-field--short">
-              <label className="form-label">ZIP</label>
-              <input
-                className="form-input"
-                name="postalCode"
-                value={form.postalCode}
-                onChange={handleChange}
-                placeholder="63102"
-                required
-              />
-            </div>
-          </div>
-          <button className="form-submit" type="submit" disabled={loading}>
-            {loading ? (
-              <span className="btn-loading">
-                <span className="btn-spinner" /> Searching…
-              </span>
-            ) : (
-              "Find My Store"
-            )}
-          </button>
-        </form>
 
         {error && (
           <div className="catalogue-error">
@@ -214,25 +178,45 @@ export default function Catalogue() {
                 </div>
               ) : (
                 <div className="items-grid">
-                  {filtered.map((item, i) => (
-                    <div className="item-card" key={item.code}>
-                      <div className="item-card__icon">{cardEmoji(i)}</div>
-                      <div className="item-card__body">
-                        <h3 className="item-card__name">{item.name}</h3>
-                        {item.description && (
-                          <p className="item-card__desc">{item.description}</p>
-                        )}
+                  {filtered.map((item, i) => {
+                    const state = orderState[item.code] ?? "idle";
+                    return (
+                      <div className="item-card" key={item.code}>
+                        <div className="item-card__icon">{cardEmoji(i)}</div>
+                        <div className="item-card__body">
+                          <h3 className="item-card__name">{item.name}</h3>
+                          {item.description && (
+                            <p className="item-card__desc">{item.description}</p>
+                          )}
+                        </div>
+                        <div className="item-card__footer">
+                          <span className="item-card__price">
+                            {item.price
+                              ? `$${parseFloat(item.price).toFixed(2)}`
+                              : "—"}
+                          </span>
+                          {state === "ordered" ? (
+                            <span className="item-card__ordered">Order placed!</span>
+                          ) : state === "error" ? (
+                            <button
+                              className="item-card__btn item-card__btn--error"
+                              onClick={() => handleRedeem(item)}
+                            >
+                              Retry
+                            </button>
+                          ) : (
+                            <button
+                              className="item-card__btn"
+                              onClick={() => handleRedeem(item)}
+                              disabled={state === "ordering"}
+                            >
+                              {state === "ordering" ? "…" : "Redeem"}
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <div className="item-card__footer">
-                        <span className="item-card__price">
-                          {item.price
-                            ? `$${parseFloat(item.price).toFixed(2)}`
-                            : "—"}
-                        </span>
-                        <button className="item-card__btn">Redeem</button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </section>
