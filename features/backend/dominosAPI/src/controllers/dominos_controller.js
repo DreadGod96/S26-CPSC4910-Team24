@@ -1,5 +1,18 @@
 import * as dominos_model from '../models/dominos_model.js';
 
+export async function getItemImage(req, res) {
+  try {
+    const { code } = req.params;
+    const { buffer, contentType } = await dominos_model.getItemImage(code);
+    res.set('Content-Type', contentType);
+    res.set('Cache-Control', 'public, max-age=86400');
+    return res.send(buffer);
+  } catch (err) {
+    console.error('Image fetch error:', err.message);
+    return res.status(404).json({ error: err.message });
+  }
+}
+
 export async function phantomPlaceOrder(req, res) {
   try {
     const { address, items, customer, payment } = req.body;

@@ -71,6 +71,7 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
     name: product.name ?? code,
     description: product.description ?? '',
     price: product.price ?? null,
+    imageCode: product.imageCode ?? null,
   }));
 
   const result = {
@@ -83,6 +84,28 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
 
   await writeCache(result);
   return result;
+}
+
+/**
+ * Fetches a Dominos product image from their CDN and returns it as a buffer.
+ * @param {string} code - The product code (e.g. "P12IPAZA")
+ * @returns {{ buffer: Buffer, contentType: string }}
+ */
+export async function getItemImage(code) {
+  const cached = await readCache();
+  const item = cached?.specialtyItems?.find((i) => i.code === code);
+  const imageCode = item?.imageCode ?? code;
+
+  const url = `https://cache.dominos.com/npc/prod/pricing/master/en/assets/img/products/menu/W284_${imageCode}.jpg`;
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Image not found for code: ${code}`);
+  }
+
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const contentType = res.headers.get('content-type') || 'image/jpeg';
+  return { buffer, contentType };
 }
 
 /**

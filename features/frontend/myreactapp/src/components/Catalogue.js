@@ -7,6 +7,7 @@ const BASE_URL =
 
 const MENU_URL = `${BASE_URL}/get_menu`;
 const ORDER_URL = `${BASE_URL}/place_order`;
+const IMAGE_URL = (code) => `${BASE_URL}/item_image/${encodeURIComponent(code)}`;
 
 const PIZZA_EMOJI = ["🍕", "🧀", "🥩", "🌶️", "🫑", "🧅", "🍗", "🥓"];
 
@@ -182,7 +183,16 @@ export default function Catalogue() {
                     const state = orderState[item.code] ?? "idle";
                     return (
                       <div className="item-card" key={item.code}>
-                        <div className="item-card__icon">{cardEmoji(i)}</div>
+                        <img
+                          className="item-card__img"
+                          src={IMAGE_URL(item.code)}
+                          alt={item.name}
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                            e.currentTarget.nextSibling.style.display = "block";
+                          }}
+                        />
+                        <div className="item-card__icon" style={{ display: "none" }}>{cardEmoji(i)}</div>
                         <div className="item-card__body">
                           <h3 className="item-card__name">{item.name}</h3>
                           {item.description && (
