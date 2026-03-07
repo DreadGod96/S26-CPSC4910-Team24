@@ -1,58 +1,61 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { useAuth } from "./AuthContext";
+import { useLocation } from "react-router-dom";
 
-
-export default function Login({ setIsLoggedIn }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("driver");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-
-
+  const { login } = useAuth();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-        setSuccess("");
-        setError("Please fill in all fields.");
-        return;
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
     }
 
     if (password.length < 6) {
-        setSuccess("");
-        setError("Password must be at least 6 characters.");
-        return;
+      setError("Password must be at least 6 characters.");
+      return;
     }
 
     try {
-        const response = await fetch("https://tigerpoints-dev.duckdns.org/api/login", { 
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            setSuccess("Login successful! Redirecting...");
-            setIsLoggedIn(true);
-            setTimeout(() => {
-                if (role === "driver") { navigate("/dashboard"); } 
-                else if (role === "sponsor") { navigate("/orgboard"); }
-                else if (role === "admin") { navigate("/adboard"); }
-                }, 1000);
-            }
-            else {
-                setError(data.error || "Login failed.");
-            }
-    } catch (err) {
-        setError("Server connection failed.");
+      const response = await fetch(
+        process.env.REACT_APP_LOGIN_URL || "http://localhost:3003/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, role }),
         }
-}
+      );
+
+      if (response.ok) {
+        const userData = await response.json();
+        login(userData);
+        setSuccess("Login successful! Redirecting...");
+        const destination = location.state?.from?.pathname || "/dashboard";
+        setTimeout(() => navigate(destination, { replace: true }), 1000);
+      } else {
+        setError("Invalid email or password.");
+      }
+    } catch (err) {
+      setError("Server connection failed.");
+    }
+  };
 
   return (
     <div className="login-page">
@@ -64,14 +67,9 @@ export default function Login({ setIsLoggedIn }) {
             Email
             <input
               className="login-input"
-              type="email"
+              type="text"
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError("");
-                setSuccess("");
-                }}
-              //required
+              onChange={(e) => { setEmail(e.target.value); setError(""); }}
             />
           </label>
 
@@ -81,50 +79,25 @@ export default function Login({ setIsLoggedIn }) {
               className="login-input"
               type="password"
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError("");
-                setSuccess("");
-                }}
-              //required
+              onChange={(e) => { setPassword(e.target.value); setError(""); }}
             />
           </label>
 
           <div className="login-role">
             <label className="login-label">Login as:</label>
-
             <div className="role-options">
-
               <label>
-                <input
-                  type="radio"
-                  value="driver"
-                  checked={role === "driver"}
-                  onChange={(e) => setRole(e.target.value)}
-                />
+                <input type="radio" value="driver" checked={role === "driver"} onChange={(e) => setRole(e.target.value)} />
                 Driver
               </label>
-
               <label>
-                <input
-                  type="radio"
-                  value="sponsor"
-                  checked={role === "sponsor"}
-                  onChange={(e) => setRole(e.target.value)}
-                />
+                <input type="radio" value="sponsor" checked={role === "sponsor"} onChange={(e) => setRole(e.target.value)} />
                 Sponsor
               </label>
-
               <label>
-                <input
-                  type="radio"
-                  value="admin"
-                  checked={role === "admin"}
-                  onChange={(e) => setRole(e.target.value)}
-                />
+                <input type="radio" value="admin" checked={role === "admin"} onChange={(e) => setRole(e.target.value)} />
                 Admin
               </label>
-
             </div>
           </div>
 
@@ -134,11 +107,12 @@ export default function Login({ setIsLoggedIn }) {
           <button className="login-button" type="submit">
             Sign in
           </button>
+
           <p className="login-create-account">
             Don't have an account?{" "}
-            <Link to="/create-account" className="login-create-link">
+            <a className="login-create-link" href="/create-account">
               Create one here!
-            </Link>
+            </a>
           </p>
         </form>
       </div>

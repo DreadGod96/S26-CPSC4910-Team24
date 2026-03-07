@@ -3,6 +3,17 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Login from './Login';
 
+beforeEach(() => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: jest.fn().mockResolvedValue({ message: 'Login successful' }),
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const renderLogin = () => render(
   <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <Login />

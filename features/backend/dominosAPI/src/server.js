@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
-import cors from 'cors'
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,7 +14,7 @@ console.log(`Connecting to host: ${process.env.DB_HOST}`);
 
 
 const app = express();
-const PORT = process.env.LOGIN_PORT || 3003;
+const PORT = process.env.DOMINOS_PORT || 3003;
 
 const config = {
     origin: ['https://dev.d2m3eh6glowwk4.amplifyapp.com/',
@@ -30,21 +30,9 @@ const config = {
 app.use(cors(config));
 app.use(express.json());
 
-const { default: login_routes } = (await import('./routes/login_routes.js'));
-app.use('/', login_routes);
-
-
-const { test_connection } = await import('../../../../shared/lib/db.js');
+const { default: application_routes } = (await import('./routes/dominos_route.js'));
+app.use('/api/dominos', application_routes);
 
 app.listen(PORT, async () => {
-    console.log(`Login Service launched on port ${PORT}`);
-
-    try {
-        await test_connection();
-    } catch (error) {
-        console.error("Server started, but DB is unreachable.");
-    }
+    console.log(`Dominos API Service launched on port ${PORT}`);
 });
-
-
-export default app;

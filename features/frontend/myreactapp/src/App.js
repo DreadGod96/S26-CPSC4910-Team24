@@ -9,16 +9,22 @@ import SponsorOrgBoard from "./components/SponsorOrgBoard";
 import SponsorUserBoard from "./components/SponsorUserBoard";
 import AdminBoard from "./components/AdminBoard";
 import CreateAccount from "./components/CreateAccount";
+import Catalogue from "./components/Catalogue";
+import { AuthProvider, useAuth } from './components/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 function AppWrapper() {
   return (
+  <AuthProvider>
     <BrowserRouter>
-      <App />
+      <AppInner /> {}
     </BrowserRouter>
-  );
+  </AuthProvider>
+);
 }
-function App() {
+
+function AppInner() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -43,6 +49,9 @@ function App() {
             <li>
               <Link to="/apply">Apply as Driver</Link>
             </li>
+              <li>
+              <Link to="/catalogue">Catalogue</Link>
+              </li>
               {!isLoggedIn ? (
                 <li>
                   <Link to="/login">Login</Link>
@@ -62,17 +71,17 @@ function App() {
         </nav>
       </div>
       <Routes>
-        <Route path="/" element={<About />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/" element={<ProtectedRoute><About /></ProtectedRoute>} />
+        <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
         <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/apply" element={<DriverApplicationForm />} />
+        <Route path="/apply" element={<ProtectedRoute><DriverApplicationForm /></ProtectedRoute>} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/orgboard" element={<SponsorOrgBoard/>}/>
-        <Route path="/sponsboard" element={<SponsorUserBoard/>}/>
-        <Route path="/adboard" element={<AdminBoard/>}/>
+        <Route path="/dashboard" element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
+        <Route path="/orgboard" element={<ProtectedRoute><SponsorOrgBoard/></ProtectedRoute>}/>
+        <Route path="/sponsboard" element={<ProtectedRoute><SponsorUserBoard/></ProtectedRoute>}/>
+        <Route path="/adboard" element={<ProtectedRoute><AdminBoard/></ProtectedRoute>}/>
+        <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
-        
       </Routes>
     </>
   );
