@@ -84,3 +84,42 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
   await writeCache(result);
   return result;
 }
+
+/**
+ * Phantom order — validates the payload and returns a simulated confirmation
+ * without sending anything to Dominos.
+ * @param {Object} orderPayload
+ * @param {Object} orderPayload.address   - { street, city, region, postalCode }
+ * @param {Array}  orderPayload.items     - [{ code, quantity }]
+ * @param {Object} orderPayload.customer  - { firstName, lastName, email, phone }
+ * @param {string} orderPayload.payment   - "card" | "cash"
+ */
+export async function phantomPlaceOrder({ address, items, customer, payment }) {
+  if (!address?.street || !address?.city || !address?.region || !address?.postalCode) {
+    throw new Error('Missing required address fields.');
+  }
+  if (!Array.isArray(items) || items.length === 0) {
+    throw new Error('Order must contain at least one item.');
+  }
+  if (!customer?.firstName || !customer?.lastName || !customer?.email || !customer?.phone) {
+    throw new Error('Missing required customer fields.');
+  }
+  if (!['card', 'cash'].includes(payment)) {
+    throw new Error('Payment must be "card" or "cash".');
+  }
+
+  const orderId = `PHANTOM-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
+  return {
+    phantom: true,
+    orderId,
+    status: 'confirmed',
+    message: 'Phantom order accepted. No real order was placed.',
+    address,
+    items,
+    customer: { firstName: customer.firstName, lastName: customer.lastName, email: customer.email },
+    payment,
+    estimatedDelivery: '30-45 minutes',
+    placedAt: new Date().toISOString(),
+  };
+}
