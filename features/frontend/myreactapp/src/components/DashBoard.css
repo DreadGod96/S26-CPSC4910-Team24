@@ -5,34 +5,66 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Georgia', sans-serif;
 }
 
 /* =========================================
-   BODY (BACKGROUND)
+   CSS VARIABLES — Color Palette
+========================================= */
+:root {
+  --navy:        #092E4C;
+  --navy-light:  #1a4a6b;
+  --blush-bg:    #FCDDE5;
+  --card-bg:     #FEF1F4;
+  --muted-pink:  #FAEBF1;
+  --rose-hover:  #EAACBC;
+  --steel-blue:  #8596B4;
+  --border-pink: #E7B7C3;
+  --text-dark:   #092E4C;
+  --text-mid:    #2e4f53;
+  --white:       #ffffff;
+  --shadow:      rgba(9, 46, 76, 0.12);
+  --shadow-hover: rgba(9, 46, 76, 0.22);
+}
+
+/* =========================================
+   BODY
 ========================================= */
 body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #FCDDE5;
+  min-height: 100vh;
+  background: var(--blush-bg);
+  font-family: 'Georgia', serif;
 }
 
 /* =========================================
-   DASHBOARD CONTAINER
+   DASHBOARD PAGE WRAPPER
+   (centers the card on the page, below navbar)
+========================================= */
+.dashboard-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 80px 0 0;
+  background: var(--blush-bg);
+}
+
+/* =========================================
+   DASHBOARD CONTAINER (the card grid)
 ========================================= */
 .dashboard {
-  width: 420px;
-  height: 700px;
-  padding: 40px 25px;
-  border-radius: 40px;
-  border: 4px solid #092E4C;
-  background: linear-gradient(#FEF1F4, #ebdde0);
+  width: 100%;
+  max-width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 32px 24px 28px;
+  border-radius: 0;
+  border: none;
+  background: linear-gradient(160deg, #ffffff 0%, var(--muted-pink) 100%);
+  box-shadow: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: 120px;
-  gap: 25px;
+  grid-auto-rows: minmax(160px, auto);
+  gap: 16px;
 }
 
 /* =========================================
@@ -40,49 +72,133 @@ body {
 ========================================= */
 .welcome {
   grid-column: span 2;
-  height: 100px;
-  border-radius: 25px;
-  border: 4px solid #092E4C;
-  background: linear-gradient(to bottom, #ffffff, #fffffc);
+  border-radius: 18px;
+  border: 2px solid var(--navy);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 28px;
-  color: #2e4f53;
+  gap: 4px;
+  padding: 22px 20px;
+  color: var(--white);
+  font-size: 1.5rem;
+  font-family: 'Georgia', serif;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.welcome span.subtitle {
+  font-size: 0.8rem;
+  font-family: 'Verdana', sans-serif;
+  color: var(--border-pink);
+  letter-spacing: 0.05em;
+  font-weight: normal;
 }
 
 /* =========================================
-   CARDS / BUBBLES
+   CARDS / ACTION TILES
 ========================================= */
 .card {
-  border-radius: 20px;
-  border: 2px solid #092E4C;
-  background: linear-gradient(to bottom, #ffffff, #fffffc);
+  border-radius: 18px;
+  border: 2px solid var(--border-pink);
+  background: linear-gradient(145deg, var(--white) 0%, var(--card-bg) 100%);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #2e4f53;
-  font-size: 20px;
+  color: var(--text-dark);
+  font-family: 'Georgia', serif;
   text-align: center;
-  padding: 10px;
-  transition: 0.3s ease;
+  padding: 20px 14px;
+  min-height: 100px;
   cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Smaller bubbles */
-.small {
-  font-size: 14px;
+/* Subtle shimmer line at top of card */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--border-pink), var(--steel-blue), var(--border-pink));
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  border-radius: 18px 18px 0 0;
 }
 
-/* Larger bubbles */
-.large {
-  font-size: 20px;
-  font-weight: 500;
-}
-
-/* Hover effect */
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px var(--shadow-hover);
+  border-color: var(--navy);
+  background: linear-gradient(145deg, var(--muted-pink) 0%, var(--card-bg) 100%);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* Card icon area */
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Card label */
+.card-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+/* Card sublabel (e.g. dates, counts) */
+.card-sub {
+  font-size: 0.85rem;
+  font-family: 'Verdana', sans-serif;
+  color: var(--steel-blue);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+/* Full-width card (spans both columns) */
+.card.full {
+  grid-column: span 2;
+  flex-direction: row;
+  gap: 14px;
+  padding: 18px 24px;
+  min-height: 72px;
+  justify-content: flex-start;
+}
+
+.card.full .card-icon {
+  margin-bottom: 0;
+  font-size: 1.4rem;
+}
+
+.card.full .card-label {
+  font-size: 1rem;
+}
+
+/* =========================================
+   DIVIDER (optional use in grid)
+========================================= */
+.dash-divider {
+  grid-column: span 2;
+  height: 1px;
+  background: var(--border-pink);
+  border: none;
+  margin: 2px 0;
 }
