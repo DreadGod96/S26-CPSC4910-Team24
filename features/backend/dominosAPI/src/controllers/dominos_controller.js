@@ -61,7 +61,18 @@ export function clearCart(req, res) {
 export async function submitCart(req, res) {
   try {
     const { cartId } = req.params;
-    const { address, customer, payment } = req.body;
+    const { address: rawAddress, customer, payment: rawPayment } = req.body;
+
+    // Normalize address field aliases
+    const address = {
+      ...rawAddress,
+      region: rawAddress?.region ?? rawAddress?.state,
+      postalCode: rawAddress?.postalCode ?? rawAddress?.zip,
+    };
+
+    // Normalize payment: accept object { type } or plain string
+    const payment = typeof rawPayment === 'object' ? rawPayment?.type : rawPayment;
+
     const result = await dominos_model.submitCart(cartId, { address, customer, payment });
     return res.status(200).json(result);
   } catch (err) {
@@ -87,8 +98,27 @@ export async function getItemImage(req, res) {
 
 export async function phantomPlaceOrder(req, res) {
   try {
-    const { address, items, customer, payment } = req.body;
-    const result = await dominos_model.phantomPlaceOrder({ address, items, customer, payment });
+    const { cartId, address: rawAddress, items, customer, payment: rawPayment } = req.body;
+
+    // Normalize address field aliases
+    const address = rawAddress ? {
+      ...rawAddress,
+      region: rawAddress?.region ?? rawAddress?.state,
+      postalCode: rawAddress?.postalCode ?? rawAddress?.zip,
+    } : rawAddress;
+
+    // Normalize payment: accept object { type } or plain string
+    const payment = typeof rawPayment === 'object' ? rawPayment?.type : rawPayment;
+
+    let resolvedItems = items;
+    if (cartId) {
+      const cart = dominos_model.getCart(cartId);
+      if (!cart) return res.status(404).json({ error: `Cart not found: ${cartId}` });
+      if (cart.items.length === 0) return res.status(400).json({ error: 'Cart is empty.' });
+      resolvedItems = cart.items.map(({ code, quantity }) => ({ code, quantity }));
+    }
+
+    const result = await dominos_model.phantomPlaceOrder({ address, items: resolvedItems, customer, payment });
     return res.status(200).json(result);
   } catch (err) {
     console.error('Phantom order error:', err.message);
