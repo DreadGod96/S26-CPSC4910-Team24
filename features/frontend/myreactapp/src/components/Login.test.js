@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import Login from './Login';
 
 beforeEach(() => {
@@ -14,11 +15,15 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-const renderLogin = () => render(
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    <Login />
-  </MemoryRouter>
-);
+const renderLogin = () => {
+  render(
+    <AuthProvider>
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    </AuthProvider>
+  );
+};
 
 test('renders login form', () => {
   renderLogin();
