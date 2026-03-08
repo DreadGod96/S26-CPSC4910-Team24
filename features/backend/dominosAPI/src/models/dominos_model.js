@@ -138,6 +138,119 @@ export async function getItemImage(code) {
   }
 }
 
+// ─── In-memory cart store ────────────────────────────────────────────────────
+// Map<cartId, { cartId, items: Map<code, { code, name, price, quantity }>, createdAt }>
+const carts = new Map();
+
+function makeCartId() {
+  return `cart-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+}
+
+function serializeCart(cart) {
+  return {
+    cartId: cart.cartId,
+    items: [...cart.items.values()],
+    itemCount: [...cart.items.values()].reduce((sum, i) => sum + i.quantity, 0),
+    createdAt: cart.createdAt,
+  };
+}
+
+/** Create a new empty cart and return its id. */
+export function createCart() {
+  const cartId = makeCartId();
+  carts.set(cartId, { cartId, items: new Map(), createdAt: new Date().toISOString() });
+  return { cartId };
+}
+
+/** Return serialized cart or null if not found. */
+export function getCart(cartId) {
+  const cart = carts.get(cartId);
+  return cart ? serializeCart(cart) : null;
+}
+
+/**
+ * Add an item to the cart. If the item already exists, quantity is incremented.
+ * @param {string} cartId
+ * @param {string} code    - product code
+ * @param {number} quantity - must be >= 1
+ * @param {string} [name]   - display name (optional, looked up from menu cache)
+ * @param {string|null} [price]
+ */
+export async function addToCart(cartId, code, quantity = 1, name, price) {
+  const cart = carts.get(cartId);
+  if (!cart) throw new Error(`Cart not found: ${cartId}`);
+  if (!Number.isInteger(quantity) || quantity < 1) throw new Error('Quantity must be a positive integer.');
+
+  // Enrich with menu data if name/price not provided
+  if (!name || price === undefined) {
+    const menuCache = await readCache();
+    const menuItem = menuCache?.specialtyItems?.find((i) => i.code === code);
+    name  = name  ?? menuItem?.name  ?? code;
+    price = price ?? menuItem?.price ?? null;
+  }
+
+  if (cart.items.has(code)) {
+    cart.items.get(code).quantity += quantity;
+  } else {
+    cart.items.set(code, { code, name, price, quantity });
+  }
+
+  return serializeCart(cart);
+}
+
+/**
+ * Update the quantity of an existing cart item.
+ * Setting quantity to 0 removes the item.
+ */
+export function updateCartItem(cartId, code, quantity) {
+  const cart = carts.get(cartId);
+  if (!cart) throw new Error(`Cart not found: ${cartId}`);
+  if (!cart.items.has(code)) throw new Error(`Item ${code} is not in the cart.`);
+  if (!Number.isInteger(quantity) || quantity < 0) throw new Error('Quantity must be a non-negative integer.');
+
+  if (quantity === 0) {
+    cart.items.delete(code);
+  } else {
+    cart.items.get(code).quantity = quantity;
+  }
+
+  return serializeCart(cart);
+}
+
+/** Remove an item entirely from the cart. */
+export function removeFromCart(cartId, code) {
+  const cart = carts.get(cartId);
+  if (!cart) throw new Error(`Cart not found: ${cartId}`);
+  if (!cart.items.has(code)) throw new Error(`Item ${code} is not in the cart.`);
+  cart.items.delete(code);
+  return serializeCart(cart);
+}
+
+/** Empty the cart without deleting it. */
+export function clearCart(cartId) {
+  const cart = carts.get(cartId);
+  if (!cart) throw new Error(`Cart not found: ${cartId}`);
+  cart.items.clear();
+  return serializeCart(cart);
+}
+
+/**
+ * Submit all items in the cart as a phantom order, then clear the cart.
+ */
+export async function submitCart(cartId, { address, customer, payment }) {
+  const cart = carts.get(cartId);
+  if (!cart) throw new Error(`Cart not found: ${cartId}`);
+  if (cart.items.size === 0) throw new Error('Cart is empty.');
+
+  const items = [...cart.items.values()].map(({ code, quantity }) => ({ code, quantity }));
+  const result = await phantomPlaceOrder({ address, items, customer, payment });
+
+  cart.items.clear();
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
  * Phantom order — validates the payload and returns a simulated confirmation
  * without sending anything to Dominos.
