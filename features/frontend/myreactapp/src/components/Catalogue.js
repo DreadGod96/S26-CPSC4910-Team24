@@ -15,6 +15,30 @@ function cardEmoji(index) {
   return PIZZA_EMOJI[index % PIZZA_EMOJI.length];
 }
 
+function ItemImage({ code, alt, emojiIndex }) {
+  const [imgState, setImgState] = useState("loading"); // "loading" | "loaded" | "error"
+
+  return (
+    <div className="item-card__img-wrap">
+      {imgState === "loading" && (
+        <div className="item-card__img-skeleton" />
+      )}
+      {imgState === "error" ? (
+        <div className="item-card__img-fallback">{cardEmoji(emojiIndex)}</div>
+      ) : (
+        <img
+          className="item-card__img"
+          src={IMAGE_URL(code)}
+          alt={alt}
+          style={imgState === "loading" ? { display: "none" } : {}}
+          onLoad={() => setImgState("loaded")}
+          onError={() => setImgState("error")}
+        />
+      )}
+    </div>
+  );
+}
+
 function SkeletonGrid() {
   return (
     <div className="items-grid">
@@ -183,16 +207,7 @@ export default function Catalogue() {
                     const state = orderState[item.code] ?? "idle";
                     return (
                       <div className="item-card" key={item.code}>
-                        <img
-                          className="item-card__img"
-                          src={IMAGE_URL(item.code)}
-                          alt={item.name}
-                          onError={(e) => {
-                            e.currentTarget.style.display = "none";
-                            e.currentTarget.nextSibling.style.display = "block";
-                          }}
-                        />
-                        <div className="item-card__icon" style={{ display: "none" }}>{cardEmoji(i)}</div>
+                        <ItemImage code={item.code} alt={item.name} emojiIndex={i} />
                         <div className="item-card__body">
                           <h3 className="item-card__name">{item.name}</h3>
                           {item.description && (

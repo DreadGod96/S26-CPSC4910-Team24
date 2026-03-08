@@ -1,11 +1,13 @@
 import { Menu, NearbyStores, Address } from 'dominos';
-import { readFile, writeFile, mkdir } from 'fs/promises';
+import { readFile, writeFile, mkdir, access } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const CACHE_PATH = path.resolve(__dirname, '../../cache/menu_cache.json');
+const IMAGE_CACHE_DIR = path.resolve(__dirname, '../../cache/images');
+const DOMINOS_IMAGE_URL = 'https://cache.dominos.com/olo/6_47_2/assets/build/market/US/_en/images/img/products/larges';
 
 async function readCache() {
   try {
@@ -87,25 +89,53 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
 }
 
 /**
- * Fetches a Dominos product image from their CDN and returns it as a buffer.
+ * Fetches a Dominos product image. Tries the live CDN first; on failure falls
+ * back to the local file cache. Successfully fetched images are saved to
+ * cache/images/{code}.jpg for future use.
  * @param {string} code - The product code (e.g. "P12IPAZA")
  * @returns {{ buffer: Buffer, contentType: string }}
  */
 export async function getItemImage(code) {
-  const cached = await readCache();
-  const item = cached?.specialtyItems?.find((i) => i.code === code);
+  const cachedImagePath = path.join(IMAGE_CACHE_DIR, `${code}.jpg`);
+
+  // Resolve the imageCode: preconfiguredProducts use a separate imageCode for CDN lookups
+  const menuCache = await readCache();
+  const item = menuCache?.specialtyItems?.find((i) => i.code === code);
   const imageCode = item?.imageCode ?? code;
 
-  const url = `https://cache.dominos.com/npc/prod/pricing/master/en/assets/img/products/menu/W284_${imageCode}.jpg`;
-  const res = await fetch(url);
+  // 1. Try live Dominos CDN
+  try {
+    const url = `${DOMINOS_IMAGE_URL}/${imageCode}.jpg`;
+    console.log(`Fetching live image: ${url}`);
+    const res = await fetch(url);
 
-  if (!res.ok) {
-    throw new Error(`Image not found for code: ${code}`);
+    if (res.ok) {
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const contentType = res.headers.get('content-type') || 'image/jpeg';
+
+      // Save to local cache asynchronously (don't block the response)
+      mkdir(IMAGE_CACHE_DIR, { recursive: true })
+        .then(() => writeFile(cachedImagePath, buffer))
+        .catch((err) => console.warn(`Failed to cache image ${code}:`, err.message));
+
+      console.log(`Served live image for: ${code}`);
+      return { buffer, contentType };
+    }
+
+    console.warn(`Live image not found for ${code} (status ${res.status}), falling back to cache.`);
+  } catch (err) {
+    console.warn(`Live image fetch failed for ${code}:`, err.message, '— falling back to cache.');
   }
 
-  const buffer = Buffer.from(await res.arrayBuffer());
-  const contentType = res.headers.get('content-type') || 'image/jpeg';
-  return { buffer, contentType };
+  // 2. Fall back to local file cache
+  try {
+    await access(cachedImagePath);
+    const buffer = await readFile(cachedImagePath);
+    console.log(`Served cached image for: ${code}`);
+    return { buffer, contentType: 'image/jpeg' };
+  } catch {
+    throw new Error(`Image not found for code: ${code}`);
+  }
 }
 
 /**
