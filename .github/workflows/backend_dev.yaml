@@ -36,6 +36,12 @@ jobs:
           npm install
           npm test
 
+      - name: Install and test dominos
+        working-directory: features/backend/dominosAPI
+        run: | 
+          npm install
+          npm test
+
       - name: Deploy backend to cloud
         if: success()
         uses: appleboy/ssh-action@master
@@ -57,4 +63,8 @@ jobs:
 
             cd ../login_service
             npm install --production
-            pm2 restart login_service_dev            
+            pm2 restart login_service_dev         
+
+            cd ../dominosAPI
+            npm install --production
+            pm2 restart dominos_service_dev 
