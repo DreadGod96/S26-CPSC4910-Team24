@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Catalogue.css";
 
 const BASE_URL =
@@ -65,8 +66,11 @@ export default function Catalogue() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+
   // Per-item order state: code -> "idle" | "ordering" | "ordered" | "error"
   const [orderState, setOrderState] = useState({});
+  
 
   useEffect(() => {
     async function fetchMenu() {
@@ -214,6 +218,14 @@ export default function Catalogue() {
                             <p className="item-card__desc">{item.description}</p>
                           )}
                         </div>
+                        <button
+                          className="item-card__btn"
+                          onClick={() =>
+                            navigate(`/product/${item.code}`, { state: { item } })
+                          }
+                        >
+                          View Details
+                        </button>
                         <div className="item-card__footer">
                           <span className="item-card__price">
                             {item.price

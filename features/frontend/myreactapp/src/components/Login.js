@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("driver");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
@@ -32,6 +31,13 @@ export default function Login() {
       setError("Password must be at least 6 characters.");
       return;
     }
+                                                  //    |||||
+    //IF YOU DONT FEEL LIKE STARTING THE LOGIN SERVICE! VVVVV
+    if (email === "test@test.com" && password === "password") {
+    login({ email: "test@test.com", role: "driver" });
+    navigate("/dashboard", { replace: true });
+    return;
+    }
 
     try {
       const response = await fetch(
@@ -39,7 +45,7 @@ export default function Login() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, role }),
+          body: JSON.stringify({ email, password }),
         }
       );
 
@@ -83,7 +89,7 @@ export default function Login() {
             />
           </label>
 
-          <div className="login-role">
+          {/* <div className="login-role">
             <label className="login-label">Login as:</label>
             <div className="role-options">
               <label>
@@ -99,7 +105,7 @@ export default function Login() {
                 Admin
               </label>
             </div>
-          </div>
+          </div> */}
 
           {error && <p className="login-error">{error}</p>}
           {success && <p className="login-success">{success}</p>}

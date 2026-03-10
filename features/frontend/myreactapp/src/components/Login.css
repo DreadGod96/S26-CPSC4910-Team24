@@ -89,7 +89,7 @@
   text-align: center;
 }
 
-.login-role {
+/* .login-role {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -108,7 +108,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
+} */
 
 .login-create-account {
   margin-top: 20px;

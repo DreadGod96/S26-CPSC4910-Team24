@@ -12,6 +12,7 @@ import CreateAccount from "./components/CreateAccount";
 import Catalogue from "./components/Catalogue";
 import { AuthProvider, useAuth } from './components/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProductDetails from "./components/ProductDetails";
 
 
 function AppWrapper() {
@@ -25,14 +26,15 @@ function AppWrapper() {
 }
 
 function AppInner() {
+  
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { logout, isAuthenticated } = useAuth();
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    navigate("/about");
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -52,10 +54,10 @@ function AppInner() {
               <li>
               <Link to="/catalogue">Catalogue</Link>
               </li>
-              {!isLoggedIn ? (
-                <li>
-                  <Link to="/login">Login</Link>
-                </li>
+              {!isAuthenticated ? (
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
               ) : (
                 <li>
                   <button className="btn btn-sm" onClick={handleLogout}>
@@ -75,12 +77,14 @@ function AppInner() {
         <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
         <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/apply" element={<ProtectedRoute><DriverApplicationForm /></ProtectedRoute>} />
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
         <Route path="/orgboard" element={<ProtectedRoute><SponsorOrgBoard/></ProtectedRoute>}/>
         <Route path="/sponsboard" element={<ProtectedRoute><SponsorUserBoard/></ProtectedRoute>}/>
         <Route path="/adboard" element={<ProtectedRoute><AdminBoard/></ProtectedRoute>}/>
         <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
+        <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}
+/>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
