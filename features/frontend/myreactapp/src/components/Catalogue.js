@@ -211,7 +211,7 @@ export default function Catalogue() {
                     const state = orderState[item.code] ?? "idle";
                     return (
                       <div className="item-card" key={item.code}>
-                        <ItemImage code={item.imageCode || item.code} alt={item.name} emojiIndex={i} />
+                        <ItemImage code={item.code} alt={item.name} emojiIndex={i} />
                         <div className="item-card__body">
                           <h3 className="item-card__name">{item.name}</h3>
                           {item.description && (

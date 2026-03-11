@@ -73,7 +73,7 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
     name: product.name ?? code,
     description: product.description ?? '',
     price: product.price ?? null,
-    imageCode: menu.menu.variants[code]?.productCode ?? product.imageCode ?? null,
+    imageCode: product.imageCode ?? null,
   }));
 
   const result = {
