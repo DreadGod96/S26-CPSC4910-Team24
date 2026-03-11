@@ -40,8 +40,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch(
-        process.env.REACT_APP_LOGIN_URL || "http://localhost:3003/api/login",
+      const response = await fetch("/api/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
