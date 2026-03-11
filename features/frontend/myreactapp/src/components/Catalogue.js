@@ -7,8 +7,8 @@ const BASE_URL =
   "http://localhost:3005/api/dominos";
 
 const MENU_URL = `${BASE_URL}/get_menu`;
-const ORDER_URL = `${BASE_URL}/place_order`;
 const IMAGE_URL = (code) => `${BASE_URL}/item_image/${encodeURIComponent(code)}`;
+const CART_URL = `${BASE_URL}/cart`;
 
 const PIZZA_EMOJI = ["🍕", "🧀", "🥩", "🌶️", "🫑", "🧅", "🍗", "🥓"];
 
@@ -16,6 +16,7 @@ function cardEmoji(index) {
   return PIZZA_EMOJI[index % PIZZA_EMOJI.length];
 }
 
+// Always pass item.code — the backend resolves imageCode from its menu cache.
 function ItemImage({ code, alt, emojiIndex }) {
   const [imgState, setImgState] = useState("loading"); // "loading" | "loaded" | "error"
 
@@ -33,7 +34,10 @@ function ItemImage({ code, alt, emojiIndex }) {
           alt={alt}
           style={imgState === "loading" ? { display: "none" } : {}}
           onLoad={() => setImgState("loaded")}
-          onError={() => setImgState("error")}
+          onError={() => {
+            console.warn(`[Catalogue] Image failed to load for item code: ${code}`);
+            setImgState("error");
+          }}
         />
       )}
     </div>
@@ -61,6 +65,85 @@ function SkeletonGrid() {
   );
 }
 
+function CartDrawer({ cart, onRemove, onUpdateQty, onSubmit, submitting, submitResult, onClose }) {
+  const total = cart.items.reduce((sum, item) => {
+    return sum + (parseFloat(item.price) || 0) * item.quantity;
+  }, 0);
+
+  return (
+    <div className="cart-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="cart-drawer">
+        <div className="cart-drawer__header">
+          <h2 className="cart-drawer__title">Your Cart</h2>
+          <button className="cart-drawer__close" onClick={onClose} aria-label="Close cart">✕</button>
+        </div>
+
+        {cart.items.length === 0 ? (
+          <div className="cart-empty">
+            <span className="cart-empty__icon">🛒</span>
+            <p>Your cart is empty. Add items to get started!</p>
+          </div>
+        ) : (
+          <>
+            <ul className="cart-items">
+              {cart.items.map((item) => (
+                <li className="cart-item" key={item.code}>
+                  <div className="cart-item__info">
+                    <span className="cart-item__name">{item.name}</span>
+                    <span className="cart-item__price">
+                      {item.price ? `$${parseFloat(item.price).toFixed(2)}` : "—"}
+                    </span>
+                  </div>
+                  <div className="cart-item__controls">
+                    <button
+                      className="cart-item__qty-btn"
+                      onClick={() => onUpdateQty(item.code, item.quantity - 1)}
+                      disabled={submitting}
+                      aria-label="Decrease quantity"
+                    >−</button>
+                    <span className="cart-item__qty">{item.quantity}</span>
+                    <button
+                      className="cart-item__qty-btn"
+                      onClick={() => onUpdateQty(item.code, item.quantity + 1)}
+                      disabled={submitting}
+                      aria-label="Increase quantity"
+                    >+</button>
+                    <button
+                      className="cart-item__remove"
+                      onClick={() => onRemove(item.code)}
+                      disabled={submitting}
+                      aria-label={`Remove ${item.name}`}
+                    >🗑</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="cart-total">
+              <span>Total</span>
+              <span className="cart-total__amount">${total.toFixed(2)}</span>
+            </div>
+
+            {submitResult && (
+              <div className={`cart-result cart-result--${submitResult.type}`}>
+                {submitResult.message}
+              </div>
+            )}
+
+            <button
+              className="cart-submit-btn"
+              onClick={onSubmit}
+              disabled={submitting}
+            >
+              {submitting ? "Placing Order…" : "Checkout"}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Catalogue() {
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -68,9 +151,27 @@ export default function Catalogue() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  // Per-item order state: code -> "idle" | "ordering" | "ordered" | "error"
-  const [orderState, setOrderState] = useState({});
-  
+  // Cart state
+  const [cartId, setCartId] = useState(null);
+  const [cart, setCart] = useState({ items: [], itemCount: 0 });
+  const [cartOpen, setCartOpen] = useState(false);
+  const [addingToCart, setAddingToCart] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitResult, setSubmitResult] = useState(null);
+
+  // Initialize cart session on mount
+  useEffect(() => {
+    async function initCart() {
+      try {
+        const res = await fetch(CART_URL, { method: "POST" });
+        const data = await res.json();
+        setCartId(data.cartId);
+      } catch (err) {
+        console.error("[Catalogue] Failed to create cart:", err);
+      }
+    }
+    initCart();
+  }, []);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -90,20 +191,74 @@ export default function Catalogue() {
     fetchMenu();
   }, []);
 
-  async function handleRedeem(item) {
-    setOrderState((s) => ({ ...s, [item.code]: "ordering" }));
+  async function handleAddToCart(item) {
+    if (!cartId) return;
+    setAddingToCart((s) => ({ ...s, [item.code]: true }));
     try {
-      const res = await fetch(ORDER_URL, {
+      const res = await fetch(`${CART_URL}/${cartId}/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: item.code, quantity: 1 }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setCart(data);
+    } catch (err) {
+      console.error("[Catalogue] Add to cart failed:", err);
+    } finally {
+      setAddingToCart((s) => ({ ...s, [item.code]: false }));
+    }
+  }
+
+  async function handleUpdateQty(code, quantity) {
+    if (!cartId) return;
+    if (quantity <= 0) {
+      handleRemove(code);
+      return;
+    }
+    try {
+      const res = await fetch(`${CART_URL}/${cartId}/item/${encodeURIComponent(code)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setCart(data);
+    } catch (err) {
+      console.error("[Catalogue] Update quantity failed:", err);
+    }
+  }
+
+  async function handleRemove(code) {
+    if (!cartId) return;
+    try {
+      const res = await fetch(`${CART_URL}/${cartId}/item/${encodeURIComponent(code)}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setCart(data);
+    } catch (err) {
+      console.error("[Catalogue] Remove from cart failed:", err);
+    }
+  }
+
+  async function handleSubmit() {
+    if (!cartId || cart.items.length === 0) return;
+    setSubmitting(true);
+    setSubmitResult(null);
+    try {
+      const res = await fetch(`${CART_URL}/${cartId}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           address: {
-          street: "101 Calhoun Dr",
-          city: "Clemson",
-          region: "SC",
-          postalCode: "29634",
+            street: "101 Calhoun Dr",
+            city: "Clemson",
+            region: "SC",
+            postalCode: "29634",
           },
-          items: [{ code: item.code, quantity: 1 }],
           customer: {
             firstName: "Tiger",
             lastName: "Points",
@@ -115,9 +270,12 @@ export default function Catalogue() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setOrderState((s) => ({ ...s, [item.code]: "ordered" }));
-    } catch {
-      setOrderState((s) => ({ ...s, [item.code]: "error" }));
+      setCart({ items: [], itemCount: 0 });
+      setSubmitResult({ type: "success", message: `Order placed! Confirmation: ${data.orderId}` });
+    } catch (err) {
+      setSubmitResult({ type: "error", message: err.message || "Checkout failed. Please try again." });
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -154,22 +312,34 @@ export default function Catalogue() {
                 <span className="store-pin">📍</span>
                 <span className="store-name">{menu.storeName}</span>
               </div>
-              <span
-                className={`status-badge ${
-                  menu.fromCache
-                    ? "status-badge--cached"
+              <div className="store-bar__right">
+                <span
+                  className={`status-badge ${
+                    menu.fromCache
+                      ? "status-badge--cached"
+                      : menu.isOpen
+                      ? "status-badge--open"
+                      : "status-badge--closed"
+                  }`}
+                >
+                  <span className="status-dot" />
+                  {menu.fromCache
+                    ? "Cached Menu"
                     : menu.isOpen
-                    ? "status-badge--open"
-                    : "status-badge--closed"
-                }`}
-              >
-                <span className="status-dot" />
-                {menu.fromCache
-                  ? "Cached Menu"
-                  : menu.isOpen
-                  ? "Open Now"
-                  : "Closed"}
-              </span>
+                    ? "Open Now"
+                    : "Closed"}
+                </span>
+                <button
+                  className="cart-fab"
+                  onClick={() => setCartOpen(true)}
+                  aria-label="Open cart"
+                >
+                  🛒 Cart
+                  {cart.itemCount > 0 && (
+                    <span className="cart-badge">{cart.itemCount}</span>
+                  )}
+                </button>
+              </div>
             </div>
 
             <section className="items-section">
@@ -208,10 +378,10 @@ export default function Catalogue() {
               ) : (
                 <div className="items-grid">
                   {filtered.map((item, i) => {
-                    const state = orderState[item.code] ?? "idle";
+                    const isAdding = addingToCart[item.code] ?? false;
                     return (
                       <div className="item-card" key={item.code}>
-                        <ItemImage code={item.imageCode || item.code} alt={item.name} emojiIndex={i} />
+                        <ItemImage code={item.code} alt={item.name} emojiIndex={i} />
                         <div className="item-card__body">
                           <h3 className="item-card__name">{item.name}</h3>
                           {item.description && (
@@ -232,24 +402,13 @@ export default function Catalogue() {
                               ? `$${parseFloat(item.price).toFixed(2)}`
                               : "—"}
                           </span>
-                          {state === "ordered" ? (
-                            <span className="item-card__ordered">Order placed!</span>
-                          ) : state === "error" ? (
-                            <button
-                              className="item-card__btn item-card__btn--error"
-                              onClick={() => handleRedeem(item)}
-                            >
-                              Retry
-                            </button>
-                          ) : (
-                            <button
-                              className="item-card__btn"
-                              onClick={() => handleRedeem(item)}
-                              disabled={state === "ordering"}
-                            >
-                              {state === "ordering" ? "…" : "Redeem"}
-                            </button>
-                          )}
+                          <button
+                            className="item-card__btn item-card__btn--cart"
+                            onClick={() => handleAddToCart(item)}
+                            disabled={isAdding || !cartId}
+                          >
+                            {isAdding ? "Adding…" : "+ Cart"}
+                          </button>
                         </div>
                       </div>
                     );
@@ -259,8 +418,19 @@ export default function Catalogue() {
             </section>
           </>
         )}
-
       </div>
+
+      {cartOpen && (
+        <CartDrawer
+          cart={cart}
+          onRemove={handleRemove}
+          onUpdateQty={handleUpdateQty}
+          onSubmit={handleSubmit}
+          submitting={submitting}
+          submitResult={submitResult}
+          onClose={() => { setCartOpen(false); setSubmitResult(null); }}
+        />
+      )}
     </div>
   );
 }
