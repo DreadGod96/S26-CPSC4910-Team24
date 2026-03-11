@@ -62,4 +62,4 @@ jobs:
 
             cd ../dominosAPI
             npm install --production
-            pm2 restart dominos_service_dev 
+            pm2 restart dominos_service_prod
