@@ -1,0 +1,275 @@
+{
+  "info": {
+    "_postman_id": "8fc8bd1e-26b2-4301-a625-5259277f55fe",
+    "name": "Dominos Cart API",
+    "description": "Postman collection for the Dominos Cart API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51708404",
+    "_collection_link": "https://go.postman.co/collection/51708404-8fc8bd1e-26b2-4301-a625-5259277f55fe?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json.cartId) {",
+              "    pm.collectionVariables.set('cartId', json.cartId);",
+              "    console.log('cartId saved:', json.cartId);",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart"
+          ]
+        },
+        "description": "Create a new cart. Returns { cartId }."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Cart Contents",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart/{{cartId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart",
+            "{{cartId}}"
+          ]
+        },
+        "description": "Get cart contents and item count for the given cartId."
+      },
+      "response": []
+    },
+    {
+      "name": "Add Item to Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"F_PBITES\",\n  \"quantity\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart/{{cartId}}/add",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart",
+            "{{cartId}}",
+            "add"
+          ]
+        },
+        "description": "Add an item to the cart. Increments quantity if item already present."
+      },
+      "response": []
+    },
+    {
+      "name": "Set Item Quantity",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 2\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart/{{cartId}}/item/{{itemCode}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart",
+            "{{cartId}}",
+            "item",
+            "{{itemCode}}"
+          ]
+        },
+        "description": "Set exact quantity for a specific item. Set quantity to 0 to remove the item."
+      },
+      "response": []
+    },
+    {
+      "name": "Remove Item from Cart",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart/{{cartId}}/item/{{itemCode}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart",
+            "{{cartId}}",
+            "item",
+            "{{itemCode}}"
+          ]
+        },
+        "description": "Remove a specific item entirely from the cart."
+      },
+      "response": []
+    },
+    {
+      "name": "Clear Cart",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart/{{cartId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart",
+            "{{cartId}}"
+          ]
+        },
+        "description": "Clear all items from the cart. The cart itself is kept."
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Cart (Phantom Order)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"apt\": \"\",\n    \"city\": \"Springfield\",\n    \"state\": \"IL\",\n    \"zip\": \"62701\"\n  },\n  \"customer\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"555-555-5555\"\n  },\n  \"payment\": {\n    \"type\": \"card\",\n    \"number\": \"4111111111111111\",\n    \"expiration\": \"01/30\",\n    \"cvv\": \"123\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/dominos/cart/{{cartId}}/submit",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dominos",
+            "cart",
+            "{{cartId}}",
+            "submit"
+          ]
+        },
+        "description": "Submit the cart as a phantom order. Clears the cart after submission."
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "cartId",
+      "value": ""
+    },
+    {
+      "key": "itemCode",
+      "value": ""
+    }
+  ]
+}

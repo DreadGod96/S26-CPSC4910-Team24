@@ -9,24 +9,32 @@ import SponsorOrgBoard from "./components/SponsorOrgBoard";
 import SponsorUserBoard from "./components/SponsorUserBoard";
 import AdminBoard from "./components/AdminBoard";
 import CreateAccount from "./components/CreateAccount";
+import Catalogue from "./components/Catalogue";
+import { AuthProvider, useAuth } from './components/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import ProductDetails from "./components/ProductDetails";
 
 
 function AppWrapper() {
   return (
+  <AuthProvider>
     <BrowserRouter>
-      <App />
+      <AppInner /> {}
     </BrowserRouter>
-  );
+  </AuthProvider>
+);
 }
-function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function AppInner() {
+  
+
+  const { logout, isAuthenticated } = useAuth();
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    navigate("/about");
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -43,10 +51,13 @@ function App() {
             <li>
               <Link to="/apply">Apply as Driver</Link>
             </li>
-              {!isLoggedIn ? (
-                <li>
-                  <Link to="/login">Login</Link>
-                </li>
+              <li>
+              <Link to="/catalogue">Catalogue</Link>
+              </li>
+              {!isAuthenticated ? (
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
               ) : (
                 <li>
                   <button className="btn btn-sm" onClick={handleLogout}>
@@ -62,17 +73,19 @@ function App() {
         </nav>
       </div>
       <Routes>
-        <Route path="/" element={<About />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/" element={<ProtectedRoute><About /></ProtectedRoute>} />
+        <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
         <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/apply" element={<DriverApplicationForm />} />
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/orgboard" element={<SponsorOrgBoard/>}/>
-        <Route path="/sponsboard" element={<SponsorUserBoard/>}/>
-        <Route path="/adboard" element={<AdminBoard/>}/>
+        <Route path="/apply" element={<ProtectedRoute><DriverApplicationForm /></ProtectedRoute>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
+        <Route path="/orgboard" element={<ProtectedRoute><SponsorOrgBoard/></ProtectedRoute>}/>
+        <Route path="/sponsboard" element={<ProtectedRoute><SponsorUserBoard/></ProtectedRoute>}/>
+        <Route path="/adboard" element={<ProtectedRoute><AdminBoard/></ProtectedRoute>}/>
+        <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
+        <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}
+/>
         <Route path="*" element={<NotFound />} />
-        
       </Routes>
     </>
   );

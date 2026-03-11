@@ -1,13 +1,29 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import Login from './Login';
 
-const renderLogin = () => render(
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    <Login />
-  </MemoryRouter>
-);
+beforeEach(() => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: jest.fn().mockResolvedValue({ message: 'Login successful' }),
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+const renderLogin = () => {
+  render(
+    <AuthProvider>
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    </AuthProvider>
+  );
+};
 
 test('renders login form', () => {
   renderLogin();

@@ -89,7 +89,7 @@
   text-align: center;
 }
 
-.login-role {
+/* .login-role {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -108,7 +108,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
+} */
 
 .login-create-account {
   margin-top: 20px;
@@ -128,3 +128,11 @@
   color: #EAACBC;
 }
 
+/* Blurred background when not authenticated */
+.login-page {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+  background: rgba(9, 46, 76, 0.45);
+}

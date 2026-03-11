@@ -7,8 +7,13 @@
     "doc": "docs"
   },
   "scripts": {
-    "init": "npm install --prefix features/frontend/myreactapp & npm install --prefix features/backend/about_service & npm install --prefix features/backend/application_service x&& npm install --prefix features/backend/login_service",
-    "backend": "npm start --prefix features/backend/about_service & npm start --prefix features/backend/application_service & npm start --prefix features/backend/login_service",
+    "init": "npm install --prefix features/frontend/myreactapp && npm install --prefix features/backend/about_service && npm install --prefix features/backend/application_service && npm install --prefix features/backend/login_service && npm install --prefix features/backend/points_service && npm install --prefix features/backend/dominosAPI",
+    "backend": "npm start --prefix features/backend/about_service & npm start --prefix features/backend/application_service & npm start --prefix features/backend/login_service & npm start --prefix features/backend/points_service & npm start --prefix features/backend/dominosAPI",
+    "backend:about": "npm start --prefix features/backend/about_service",
+    "backend:application": "npm start --prefix features/backend/application_service",
+    "backend:login": "npm start --prefix features/backend/login_service",
+    "backend:points": "npm start --prefix features/backend/points_service",
+    "backend:dominos": "npm start --prefix features/backend/dominosAPI",
     "frontend": "npm start --prefix features/frontend/myreactapp"
   },
   "repository": {

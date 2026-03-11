@@ -35,5 +35,7 @@ select * from Application;
 select * from User;
 select * from Company;
 select * from Login;
+select * from PW_Reset;
+select * from Points;
 
 call get_company_list();
