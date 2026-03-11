@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS Notification;
 DROP TABLE IF EXISTS Notification_Type;
 DROP TABLE IF EXISTS Audit_Log;
 DROP TABLE IF EXISTS Points;
+DROP TABLE IF EXISTS Points_History;
 DROP TABLE IF EXISTS Application;
 DROP TABLE IF EXISTS Order_Item;
 DROP TABLE IF EXISTS `Order`;
@@ -134,7 +135,7 @@ CREATE TABLE Application (
 );
 
 -- Points
-CREATE TABLE Points (
+CREATE TABLE Points_History (
   driver_ID     INT NOT NULL,
   point_date    DATE NOT NULL,
   point_amount  DECIMAL(10,2) NOT NULL,
@@ -144,6 +145,14 @@ CREATE TABLE Points (
   FOREIGN KEY (driver_ID)
     REFERENCES `User`(user_ID),
   FOREIGN KEY (sponsor_ID)
+    REFERENCES `User`(user_ID)
+);
+
+CREATE TABLE Points (
+	driver_ID INT NOT NULL,
+    point_amount DECIMAL NOT NULL,
+    primary key (driver_ID),
+    FOREIGN KEY (driver_ID)
     REFERENCES `User`(user_ID)
 );
 
