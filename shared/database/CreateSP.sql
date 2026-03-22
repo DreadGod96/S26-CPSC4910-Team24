@@ -1,5 +1,3 @@
-use Team24_DB_DEV;
-
 drop procedure if exists add_user;
 delimiter $$
 create procedure add_user(
