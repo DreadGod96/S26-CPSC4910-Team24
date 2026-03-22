@@ -100,7 +100,7 @@ const DriverApplicationForm = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await fetch('http://localhost:3002/api/application/companylist');
+        const response = await fetch('/api/application');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
