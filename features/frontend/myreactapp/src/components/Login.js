@@ -40,7 +40,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("/api/login",
+      const response = await fetch(REACT_APP_LOGIN_URL,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
