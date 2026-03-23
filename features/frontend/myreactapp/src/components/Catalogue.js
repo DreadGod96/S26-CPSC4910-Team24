@@ -91,7 +91,7 @@ function CartDrawer({ cart, onRemove, onUpdateQty, onSubmit, submitting, submitR
                   <div className="cart-item__info">
                     <span className="cart-item__name">{item.name}</span>
                     <span className="cart-item__price">
-                      {item.price ? `$${parseFloat(item.price).toFixed(2)}` : "—"}
+                      {item.price ? `${Math.round(parseFloat(item.price) * 100)} pts` : "—"}
                     </span>
                   </div>
                   <div className="cart-item__controls">
@@ -121,7 +121,7 @@ function CartDrawer({ cart, onRemove, onUpdateQty, onSubmit, submitting, submitR
 
             <div className="cart-total">
               <span>Total</span>
-              <span className="cart-total__amount">${total.toFixed(2)}</span>
+              <span className="cart-total__amount">{Math.round(total * 100)} pts</span>
             </div>
 
             {submitResult && (
@@ -399,7 +399,7 @@ export default function Catalogue() {
                         <div className="item-card__footer">
                           <span className="item-card__price">
                             {item.price
-                              ? `$${parseFloat(item.price).toFixed(2)}`
+                              ? `${Math.round(parseFloat(item.price) * 100)} pts`
                               : "—"}
                           </span>
                           <button
