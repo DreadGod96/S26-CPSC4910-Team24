@@ -137,7 +137,7 @@ CREATE TABLE Application (
 -- Points
 CREATE TABLE Points_History (
   driver_ID     INT NOT NULL,
-  point_date    DATE NOT NULL,
+  point_date    DATETIME NOT NULL,
   point_amount  DECIMAL(10,2) NOT NULL,
   sponsor_ID    INT NOT NULL,
   points_reason VARCHAR(255) NOT NULL,

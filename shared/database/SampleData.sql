@@ -6,7 +6,7 @@ call add_user(
 'admin',
 '000-000-0000',
 'nschnab@clemson.edu',
-1
+2
 );
 
 select * from User;
@@ -37,5 +37,16 @@ select * from Company;
 select * from Login;
 select * from PW_Reset;
 select * from Points;
+select * from Points_History;
+
+insert into Points values (16, 10);
 
 call get_company_list();
+
+call get_points(16);
+call modify_points(
+	16,
+	10,
+	4,
+	'Test'
+)

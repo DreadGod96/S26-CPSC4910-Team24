@@ -125,3 +125,50 @@ BEGIN
     SELECT company_ID FROM Company where company_name like input_company_name limit 1;
 END$$
 DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS get_points$$
+CREATE PROCEDURE get_points(
+	in input_driver_ID int
+)
+begin
+	select * from Points where driver_ID = input_driver_ID;
+end$$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS modify_points$$
+CREATE PROCEDURE modify_points(
+	in input_driver_ID int,
+    in input_point_amount decimal,
+    in input_sponsor_ID int,
+    in input_points_reason varchar(30)
+)
+begin
+	insert into Points_History (
+		driver_ID,
+		point_date,
+		point_amount,
+		sponsor_ID,
+		points_reason
+    )values(
+		input_driver_ID,
+		current_time(),
+		input_point_amount,
+		input_sponsor_ID,
+		input_points_reason
+    );
+end$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER trg_points_history_update
+AFTER UPDATE ON Points_History
+FOR EACH ROW
+BEGIN
+    UPDATE Points
+    SET point_amount = point_amount + (NEW.point_amount - OLD.point_amount)
+    WHERE driver_ID = NEW.driver_ID;
+END$$
+DELIMITER ;
