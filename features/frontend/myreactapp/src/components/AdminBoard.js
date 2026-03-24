@@ -17,7 +17,7 @@ export default function AdminBoard() {
         {/* Manage Accounts */}
         <div
           className="card"
-          onClick={() => navigate("/create-account")}
+          onClick={() => navigate("/admin/users")}
         >
           <span className="card-icon">👥</span>
           <span className="card-label">Manage Accounts</span>
