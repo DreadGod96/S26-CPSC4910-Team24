@@ -7,7 +7,7 @@ export default function AdminUsers() {
   const navigate = useNavigate();
 
   useEffect(() => {
-  fetch("http://localhost:3004/api/users")
+  fetch("http://52.70.23.45:3004/api/users")
     .then((res) => res.json())
     .then((data) => {
       console.log(data);

@@ -9,7 +9,7 @@ export default function AdminUserDetails() {
   const [editedValue, setEditedValue] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:3004/api/users/${id}`)
+    fetch(`http://52.70.23.45:3004/api/users/${id}`)
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch((err) => console.error("Error fetching user:", err));
@@ -27,7 +27,7 @@ export default function AdminUserDetails() {
 
   const saveEdit = async () => {
     try {
-      const response = await fetch(`http://localhost:3004/api/users/${id}`, {
+      const response = await fetch(`http://52.70.23.45:3004/api/users/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
