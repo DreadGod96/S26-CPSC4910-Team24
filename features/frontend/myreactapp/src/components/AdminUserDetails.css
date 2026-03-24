@@ -1,0 +1,177 @@
+.admin-user-details-page {
+  min-height: 100vh;
+  background: #f7eef1;
+  padding: 40px 20px;
+}
+
+.admin-user-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.details-title {
+  font-size: 2.5rem;
+  color: #123b5d;
+  margin: 0 0 6px 0;
+}
+
+.details-subtitle {
+  margin: 0;
+  color: #6b7a89;
+  font-size: 1rem;
+}
+
+.back-button {
+  background: #123b5d;
+  color: white;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.back-button:hover {
+  background: #0f2f4a;
+}
+
+.details-card {
+  background: white;
+  border: 1px solid #e7b8c5;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.details-card-top {
+  border-bottom: 1px solid #f0d7de;
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.details-name {
+  margin: 0;
+  font-size: 2rem;
+  color: #123b5d;
+}
+
+.details-role {
+  margin: 8px 0 0 0;
+  display: inline-block;
+  background: #f3e3e8;
+  color: #123b5d;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.detail-row {
+  background: #fcf8fa;
+  border: 1px solid #f0d7de;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #6b7a89;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-value {
+  font-size: 1.05rem;
+  color: #123b5d;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #123b5d;
+  margin-top: 60px;
+}
+
+@media (max-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-title {
+    font-size: 2rem;
+  }
+
+  .details-card {
+    padding: 20px;
+  }
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+  margin-top: 10px;
+  width: fit-content;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-button {
+  background: #123b5d;
+  color: white;
+}
+
+.save-button {
+  background: #123b5d;
+  color: white;
+}
+
+.cancel-button {
+  background: #e7b8c5;
+  color: #123b5d;
+}
+
+.detail-input {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d9b8c3;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.detail-button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.detail-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

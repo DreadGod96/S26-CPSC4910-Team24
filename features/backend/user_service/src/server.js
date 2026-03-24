@@ -23,7 +23,7 @@ const config = {
         'https://dev.d2m3eh6glowwk4.amplifyapp.com',
         'http://localhost:3000'
     ],
-    methods: ['GET', 'OPTIONS'],
+    methods: ['GET', 'PUT', 'OPTIONS'],
     credentials: true
 };
 

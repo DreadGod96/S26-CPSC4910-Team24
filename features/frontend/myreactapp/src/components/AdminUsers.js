@@ -1,22 +1,35 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AdminUsers.css";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3004/api/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((err) => console.error("Error fetching users:", err));
-  }, []);
+  fetch("http://localhost:3004/api/users")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setUsers(Array.isArray(data) ? data : []);
+    })
+    .catch((err) => {
+      console.error("Error fetching users:", err);
+      setUsers([]);
+    });
+}, []);
 
   const drivers = users.filter((u) => u.user_role === "driver");
   const sponsors = users.filter((u) => u.user_role === "sponsor");
   const admins = users.filter((u) => u.user_role === "admin");
 
   const renderUserCard = (user) => (
-    <div key={user.user_ID} className="user-card">
+    <div
+      key={user.user_ID}
+      className="user-card"
+      onClick={() => navigate(`/admin/users/${user.user_ID}`)}
+      style={{ cursor: "pointer" }}
+    >
       <div className="user-name">
         {user.user_fname} {user.user_lname}
       </div>
