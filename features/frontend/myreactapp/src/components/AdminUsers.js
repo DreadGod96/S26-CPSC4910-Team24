@@ -19,9 +19,9 @@ export default function AdminUsers() {
     });
 }, []);
 
-  const drivers = users.filter((u) => u.user_role === "driver");
-  const sponsors = users.filter((u) => u.user_role === "sponsor");
-  const admins = users.filter((u) => u.user_role === "admin");
+  const drivers = users.filter((u) => u.user_role?.toLowerCase() === "driver");
+  const sponsors = users.filter((u) => u.user_role?.toLowerCase() === "sponsor");
+  const admins = users.filter((u) => u.user_role?.toLowerCase() === "admin");
 
   const renderUserCard = (user) => (
     <div
