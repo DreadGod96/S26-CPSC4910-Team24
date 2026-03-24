@@ -163,12 +163,13 @@ DELIMITER ;
 
 
 DELIMITER $$
+drop trigger if exists trg_points_history_update;
 CREATE TRIGGER trg_points_history_update
-AFTER UPDATE ON Points_History
+AFTER INSERT ON Points_History
 FOR EACH ROW
 BEGIN
     UPDATE Points
-    SET point_amount = point_amount + (NEW.point_amount - OLD.point_amount)
+    SET point_amount = point_amount + NEW.point_amount
     WHERE driver_ID = NEW.driver_ID;
 END$$
 DELIMITER ;
