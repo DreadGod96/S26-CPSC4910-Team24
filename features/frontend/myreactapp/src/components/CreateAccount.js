@@ -45,7 +45,7 @@ export default function CreateAccount() {
                 first_name: "New",
                 last_name: "User",
                 phone: "000-000-0000",
-                company_ID: 1
+                company_ID: 2
                 }),
         });
 
