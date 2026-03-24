@@ -1,0 +1,66 @@
+.admin-users-page {
+  min-height: 100vh;
+  background: #f7eef1;
+  padding: 40px 20px;
+}
+
+.admin-users-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-users-title {
+  font-size: 2rem;
+  color: #123b5d;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.admin-users-subtitle {
+  text-align: center;
+  color: #6b7a89;
+  margin-bottom: 32px;
+}
+
+.user-section {
+  background: white;
+  border: 1px solid #e7b8c5;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.user-section h2 {
+  color: #123b5d;
+  margin-bottom: 16px;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.user-card {
+  background: #f9f4f6;
+  border: 1px solid #edd0d8;
+  border-radius: 12px;
+  padding: 16px;
+  transition: transform 0.2s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-3px);
+}
+
+.user-name {
+  font-weight: bold;
+  color: #123b5d;
+  margin-bottom: 6px;
+}
+
+.user-email {
+  color: #666;
+  font-size: 0.95rem;
+}
