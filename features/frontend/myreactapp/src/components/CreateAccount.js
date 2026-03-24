@@ -38,14 +38,14 @@ export default function CreateAccount() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
-                email: email, 
-                password: password,
-                role: role,
                 username: email.split('@')[0],
+                password: password,
                 first_name: "New",
                 last_name: "User",
+                role: role,
                 phone: "000-000-0000",
-                company_ID: 1
+                email: email,
+                company_ID: 2
                 }),
         });
 
