@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProductDetails from "./components/ProductDetails";
 import AdminUsers from "./components/AdminUsers";
 import AdminUserDetails from "./components/AdminUserDetails";
+import Settings from "./components/Settings"
 
 
 function AppWrapper() {
@@ -89,6 +90,7 @@ function AppInner() {
         <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
         <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}
 />
+        <Route path="settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

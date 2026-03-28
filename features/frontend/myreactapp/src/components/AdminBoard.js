@@ -39,7 +39,7 @@ export default function AdminBoard() {
         </div>
 
         {/* Account Settings */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/settings")}>
           <span className="card-icon">⚙️</span>
           <span className="card-label">Account Settings</span>
           <span className="card-sub">Profile &amp; password</span>

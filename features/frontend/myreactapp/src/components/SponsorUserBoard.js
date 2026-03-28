@@ -1,6 +1,8 @@
 import "./DashBoard.css";
+import { useNavigate } from "react-router-dom";
 
 export default function SponsorUserBoard() {
+    const navigate = useNavigate();
   return (
     <div className="dashboard-page">
       <div className="dashboard">
@@ -33,7 +35,7 @@ export default function SponsorUserBoard() {
         </div>
 
         {/* Account Settings */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/settings")}>
           <span className="card-icon">⚙️</span>
           <span className="card-label">Account Settings</span>
           <span className="card-sub">Profile &amp; password</span>
