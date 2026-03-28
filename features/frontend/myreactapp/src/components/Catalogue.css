@@ -916,3 +916,24 @@
   color: var(--white);
   border-color: var(--navy);
 }
+
+.filter-clear-btn {
+  margin-left: auto;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--slate);
+  background: transparent;
+  color: var(--slate);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  white-space: nowrap;
+  align-self: center;
+}
+
+.filter-clear-btn:hover {
+  background: var(--slate);
+  color: var(--white);
+}

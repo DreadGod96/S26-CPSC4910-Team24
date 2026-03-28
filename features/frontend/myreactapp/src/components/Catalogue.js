@@ -477,6 +477,23 @@ export default function Catalogue() {
                     ))}
                   </div>
                 </div>
+
+                {(search || pointMode !== "any" || categoryFilter !== "All") && (
+                  <button
+                    className="filter-clear-btn"
+                    type="button"
+                    onClick={() => {
+                      setSearch("");
+                      setPointMode("any");
+                      setPointExact("");
+                      setPointMin("");
+                      setPointMax("");
+                      setCategoryFilter("All");
+                    }}
+                  >
+                    ✕ Clear Filters
+                  </button>
+                )}
               </div>
 
               {filtered.length === 0 ? (

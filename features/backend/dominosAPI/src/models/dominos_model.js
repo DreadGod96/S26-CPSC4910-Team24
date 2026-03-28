@@ -68,13 +68,30 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
     tags: product.tags ?? {},
   }));
 
-  const specialtyItems = Object.entries(menu.menu.preconfiguredProducts).map(([code, product]) => ({
-    code,
-    name: product.name ?? code,
-    description: product.description ?? '',
-    price: menu.menu.variants[code]?.price ?? product.price ?? null,
-    imageCode: menu.menu.variants[code]?.productCode ?? product.imageCode ?? null,
-  }));
+  const specialtyItems = Object.entries(menu.menu.preconfiguredProducts).map(([code, product]) => {
+    // Use || so empty strings fall through (unlike ??)
+    let imageCode = menu.menu.variants[code]?.productCode || product.imageCode || null;
+
+    // Fallback: strip the first prefix segment and look up the base product's imageCode.
+    // e.g. "P_14SCREEN" -> "14SCREEN" which has imageCode "S_PIZZA"
+    if (!imageCode) {
+      const sep = code.indexOf('_');
+      if (sep > 0) {
+        const baseCode = code.slice(sep + 1);
+        imageCode = menu.menu.variants[baseCode]?.productCode
+          || menu.menu.preconfiguredProducts[baseCode]?.imageCode
+          || null;
+      }
+    }
+
+    return {
+      code,
+      name: product.name ?? code,
+      description: product.description ?? '',
+      price: menu.menu.variants[code]?.price ?? product.price ?? null,
+      imageCode,
+    };
+  });
 
   // Find the "Hand Tossed Large Cheese" reference price for auto-filling missing prices
   let referencePrice = null;
@@ -127,7 +144,21 @@ export async function getItemImage(code) {
   // Resolve the imageCode: preconfiguredProducts use a separate imageCode for CDN lookups
   const menuCache = await readCache();
   const item = menuCache?.specialtyItems?.find((i) => i.code === code);
-  const imageCode = item?.imageCode ?? code;
+  let imageCode = item?.imageCode || null;
+
+  // If the cache entry has an empty imageCode, derive it from the base product code.
+  // e.g. "P_14SCREEN" -> "14SCREEN" whose cache entry has imageCode "S_PIZZA"
+  if (!imageCode) {
+    const sep = code.indexOf('_');
+    if (sep > 0) {
+      const baseCode = code.slice(sep + 1);
+      const baseItem = menuCache?.specialtyItems?.find((i) => i.code === baseCode);
+      imageCode = baseItem?.imageCode || null;
+    }
+  }
+
+  // Ultimate fallback: use the raw code and let the CDN 404 → local cache path
+  imageCode = imageCode || code;
 
   // 1. Try live Dominos CDN
   try {
