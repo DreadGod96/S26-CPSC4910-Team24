@@ -173,3 +173,19 @@ BEGIN
     WHERE driver_ID = NEW.driver_ID;
 END$$
 DELIMITER ;
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS post_notification;
+CREATE PROCEDURE post_notification(
+	in input_notification_type_ID varchar(50)
+)begin
+	insert into Notification (
+    notification_type_ID, 
+    notification_date
+    ) values (
+    input_notification_type_ID, 
+    current_date()
+    );
+end $$
+DELIMITER ;

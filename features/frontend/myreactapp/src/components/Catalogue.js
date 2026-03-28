@@ -12,6 +12,32 @@ const CART_URL = `${BASE_URL}/cart`;
 
 const PIZZA_EMOJI = ["🍕", "🧀", "🥩", "🌶️", "🫑", "🧅", "🍗", "🥓"];
 
+const CATEGORIES = ["All", "Pizza", "Breads", "Drinks", "Desserts"];
+
+function getItemCategory(name) {
+  const n = name.toLowerCase();
+  if (
+    n.includes("coke") || n.includes("sprite") || n.includes("pepsi") ||
+    n.includes("dr pepper") || n.includes("water") || n.includes("lemonade") ||
+    n.includes("juice") || n.includes("drink") || n.includes("soda") ||
+    n.includes("2-liter") || n.includes("bottle")
+  ) return "Drinks";
+  if (
+    n.includes("lava") || n.includes("brownie") || n.includes("marble cookie") ||
+    n.includes("cinna") || n.includes("dessert") || n.includes("cake")
+  ) return "Desserts";
+  if (
+    n.includes("bread") || n.includes("twist") || n.includes("knot") ||
+    n.includes("parmesan") || n.includes("stuffed cheesy")
+  ) return "Breads";
+  if (
+    n.includes("pizza") || n.includes("feast") || n.includes("extravaganza") ||
+    n.includes("supreme") || n.includes("pepperoni") || n.includes("veggie") ||
+    n.includes("chicken bacon") || n.includes("philly")
+  ) return "Pizza";
+  return "Other";
+}
+
 function cardEmoji(index) {
   return PIZZA_EMOJI[index % PIZZA_EMOJI.length];
 }
@@ -149,6 +175,11 @@ export default function Catalogue() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const [pointMode, setPointMode] = useState("any"); // "any" | "exact" | "range"
+  const [pointExact, setPointExact] = useState("");
+  const [pointMin, setPointMin] = useState("");
+  const [pointMax, setPointMax] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
   const navigate = useNavigate();
 
   // Cart state
@@ -279,12 +310,25 @@ export default function Catalogue() {
     }
   }
 
-  const filtered =
-    menu?.specialtyItems?.filter(
-      (item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()) ||
-        (item.description || "").toLowerCase().includes(search.toLowerCase())
-    ) ?? [];
+  const filtered = (menu?.specialtyItems ?? []).filter((item) => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      (item.description || "").toLowerCase().includes(search.toLowerCase());
+
+    const matchesCategory =
+      categoryFilter === "All" || getItemCategory(item.name) === categoryFilter;
+
+    const pts = item.price ? Math.round(parseFloat(item.price) * 100) : null;
+    let matchesPoints = true;
+    if (pointMode === "exact" && pointExact !== "") {
+      matchesPoints = pts !== null && pts === parseInt(pointExact, 10);
+    } else if (pointMode === "range") {
+      if (pointMin !== "") matchesPoints = matchesPoints && pts !== null && pts >= parseInt(pointMin, 10);
+      if (pointMax !== "") matchesPoints = matchesPoints && pts !== null && pts <= parseInt(pointMax, 10);
+    }
+
+    return matchesSearch && matchesCategory && matchesPoints;
+  });
 
   return (
     <div className="catalogue-page">
@@ -368,6 +412,71 @@ export default function Catalogue() {
                     ✕
                   </button>
                 )}
+              </div>
+
+              <div className="filter-bar">
+                <div className="filter-group">
+                  <span className="filter-label">Points</span>
+                  <div className="filter-point-modes">
+                    {["any", "exact", "range"].map((mode) => (
+                      <button
+                        key={mode}
+                        className={`filter-mode-btn${pointMode === mode ? " filter-mode-btn--active" : ""}`}
+                        onClick={() => { setPointMode(mode); setPointExact(""); setPointMin(""); setPointMax(""); }}
+                        type="button"
+                      >
+                        {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                  {pointMode === "exact" && (
+                    <input
+                      className="filter-point-input"
+                      type="number"
+                      min="0"
+                      placeholder="e.g. 100"
+                      value={pointExact}
+                      onChange={(e) => setPointExact(e.target.value)}
+                    />
+                  )}
+                  {pointMode === "range" && (
+                    <div className="filter-range">
+                      <input
+                        className="filter-point-input"
+                        type="number"
+                        min="0"
+                        placeholder="Min pts"
+                        value={pointMin}
+                        onChange={(e) => setPointMin(e.target.value)}
+                      />
+                      <span className="filter-range-sep">–</span>
+                      <input
+                        className="filter-point-input"
+                        type="number"
+                        min="0"
+                        placeholder="Max pts"
+                        value={pointMax}
+                        onChange={(e) => setPointMax(e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="filter-group">
+                  <span className="filter-label">Category</span>
+                  <div className="filter-category-btns">
+                    {CATEGORIES.map((cat) => (
+                      <button
+                        key={cat}
+                        className={`filter-cat-btn${categoryFilter === cat ? " filter-cat-btn--active" : ""}`}
+                        onClick={() => setCategoryFilter(cat)}
+                        type="button"
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {filtered.length === 0 ? (

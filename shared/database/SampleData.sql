@@ -38,6 +38,8 @@ select * from Login;
 select * from PW_Reset;
 select * from Points;
 select * from Points_History;
+select * from Notification_Type;
+select * from Notification;
 
 insert into Points values (16, 10);
 
@@ -49,4 +51,18 @@ call modify_points(
 	10,
 	4,
 	'Test'
-)
+);
+
+insert into Notification_Type (
+notification_type_method,
+notification_type_group
+) values (
+	"global",
+    "admin"
+);
+
+
+
+call post_notification (
+	"PASSWORD_RESET"
+);

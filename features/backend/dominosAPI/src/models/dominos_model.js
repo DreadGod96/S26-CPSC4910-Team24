@@ -76,12 +76,38 @@ export async function getDominosMenu({ street, city, region, postalCode }) {
     imageCode: menu.menu.variants[code]?.productCode ?? product.imageCode ?? null,
   }));
 
+  // Find the "Hand Tossed Large Cheese" reference price for auto-filling missing prices
+  let referencePrice = null;
+  const allMenuEntries = [
+    ...Object.entries(menu.menu.preconfiguredProducts),
+    ...Object.entries(menu.menu.products),
+  ];
+  for (const [code, product] of allMenuEntries) {
+    const name = (product.name ?? '').toLowerCase();
+    if (name.includes('hand toss') && name.includes('cheese')) {
+      const variantPrice = menu.menu.variants[code]?.price ?? product.price;
+      const parsed = parseFloat(variantPrice);
+      if (!isNaN(parsed) && parsed > 0) { referencePrice = parsed; break; }
+    }
+  }
+  // Fallback: try the well-known Dominos code for a 14" hand-tossed cheese
+  if (!referencePrice) {
+    const parsed = parseFloat(menu.menu.variants?.['14SCREEN']?.price);
+    if (!isNaN(parsed) && parsed > 0) referencePrice = parsed;
+  }
+
+  const autoFillPrice = referencePrice ? (referencePrice / 2).toFixed(2) : null;
+  const specialtyItemsWithPrice = specialtyItems.map((item) => ({
+    ...item,
+    price: item.price ?? autoFillPrice,
+  }));
+
   const result = {
     storeID,
     storeName: closestStore.AddressDescription,
     isOpen: true,
     products,
-    specialtyItems,
+    specialtyItems: specialtyItemsWithPrice,
   };
 
   await writeCache(result);

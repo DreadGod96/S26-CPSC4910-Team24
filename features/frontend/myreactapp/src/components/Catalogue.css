@@ -809,3 +809,110 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ========================================
+   FILTER BAR
+   ======================================== */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--blush-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--rose);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.filter-point-modes {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-mode-btn {
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--rose);
+  background: var(--white);
+  color: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.filter-mode-btn--active {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+
+.filter-point-input {
+  width: 90px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--rose);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: var(--navy);
+  background: var(--white);
+  outline: none;
+}
+
+.filter-point-input:focus {
+  border-color: var(--navy);
+}
+
+.filter-range {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-range-sep {
+  color: var(--slate);
+  font-weight: 600;
+}
+
+.filter-category-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.filter-cat-btn {
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--rose);
+  background: var(--white);
+  color: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.filter-cat-btn--active {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
