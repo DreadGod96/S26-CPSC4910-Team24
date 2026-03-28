@@ -10,6 +10,7 @@ import {
   removeFromCart,
   clearCart,
   submitCart,
+  syncCatalog,
 } from '../src/controllers/dominos_controller.js';
 import * as dominos_model from '../src/models/dominos_model.js';
 
@@ -23,6 +24,7 @@ vi.mock('../src/models/dominos_model.js', () => ({
   clearCart: vi.fn(),
   submitCart: vi.fn(),
   phantomPlaceOrder: vi.fn(),
+  syncCatalogToDb: vi.fn(),
 }));
 
 // ─── App setup ───────────────────────────────────────────────────────────────
@@ -32,6 +34,9 @@ app.use(express.json());
 
 // Menu
 app.get('/api/dominos/get_menu', getDominosMenu);
+
+// Catalog sync
+app.post('/api/dominos/sync_catalog', syncCatalog);
 
 // Cart
 app.post('/api/dominos/cart', createCart);
@@ -443,5 +448,140 @@ describe('POST /api/dominos/cart/:cartId/submit', () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toMatch(/empty/i);
+  });
+
+  it('should forward userId to the model when provided', async () => {
+    vi.mocked(dominos_model.submitCart).mockResolvedValue(mockOrderResult);
+
+    await request(app)
+      .post(`/api/dominos/cart/${CART_ID}/submit`)
+      .send({ ...validSubmitBody, userId: 42 });
+
+    expect(dominos_model.submitCart).toHaveBeenCalledWith(
+      CART_ID,
+      expect.objectContaining({ userId: 42 })
+    );
+  });
+
+  it('should include dbOrderId in the response when the model provides it', async () => {
+    vi.mocked(dominos_model.submitCart).mockResolvedValue({
+      ...mockOrderResult,
+      dbOrderId: 7,
+    });
+
+    const res = await request(app)
+      .post(`/api/dominos/cart/${CART_ID}/submit`)
+      .send({ ...validSubmitBody, userId: 42 });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.dbOrderId).toBe(7);
+  });
+
+  it('should include dbWarning in the response when the DB write fails but order succeeds', async () => {
+    vi.mocked(dominos_model.submitCart).mockResolvedValue({
+      ...mockOrderResult,
+      dbWarning: 'Order confirmed but failed to record in database.',
+    });
+
+    const res = await request(app)
+      .post(`/api/dominos/cart/${CART_ID}/submit`)
+      .send({ ...validSubmitBody, userId: 99 });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.phantom).toBe(true);
+    expect(res.body.dbWarning).toMatch(/failed to record/i);
+  });
+
+  it('should still succeed when userId is omitted (unauthenticated path)', async () => {
+    vi.mocked(dominos_model.submitCart).mockResolvedValue(mockOrderResult);
+
+    const res = await request(app)
+      .post(`/api/dominos/cart/${CART_ID}/submit`)
+      .send(validSubmitBody);
+
+    expect(res.statusCode).toBe(200);
+    expect(dominos_model.submitCart).toHaveBeenCalledWith(
+      CART_ID,
+      expect.objectContaining({ userId: undefined })
+    );
+  });
+});
+
+// ─── POST /api/dominos/sync_catalog ──────────────────────────────────────────
+
+describe('POST /api/dominos/sync_catalog', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it('should return 200 with sync summary when all items succeed', async () => {
+    vi.mocked(dominos_model.syncCatalogToDb).mockResolvedValue({
+      synced: 19,
+      skipped: 6,
+      errors: [],
+    });
+
+    const res = await request(app).post('/api/dominos/sync_catalog');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.synced).toBe(19);
+    expect(res.body.skipped).toBe(6);
+    expect(res.body.errors).toHaveLength(0);
+    expect(res.body.message).toMatch(/19 synced/i);
+  });
+
+  it('should return 207 when some items fail to sync', async () => {
+    vi.mocked(dominos_model.syncCatalogToDb).mockResolvedValue({
+      synced: 17,
+      skipped: 6,
+      errors: [
+        { code: 'BAD_ITEM', name: 'Unknown Item', error: 'Duplicate entry' },
+        { code: 'BAD_ITEM2', name: 'Another Item', error: 'Column too long' },
+      ],
+    });
+
+    const res = await request(app).post('/api/dominos/sync_catalog');
+
+    expect(res.statusCode).toBe(207);
+    expect(res.body.synced).toBe(17);
+    expect(res.body.errors).toHaveLength(2);
+    expect(res.body.errors[0].code).toBe('BAD_ITEM');
+    expect(res.body.message).toMatch(/2 errors/i);
+  });
+
+  it('should return 500 when the model throws (e.g. no cache exists)', async () => {
+    vi.mocked(dominos_model.syncCatalogToDb).mockRejectedValue(
+      new Error('Menu cache is empty or missing. Fetch the menu at least once before syncing.')
+    );
+
+    const res = await request(app).post('/api/dominos/sync_catalog');
+
+    expect(res.statusCode).toBe(500);
+    expect(res.body.error).toMatch(/cache/i);
+  });
+
+  it('should call syncCatalogToDb exactly once per request', async () => {
+    vi.mocked(dominos_model.syncCatalogToDb).mockResolvedValue({
+      synced: 5,
+      skipped: 0,
+      errors: [],
+    });
+
+    await request(app).post('/api/dominos/sync_catalog');
+
+    expect(dominos_model.syncCatalogToDb).toHaveBeenCalledOnce();
+  });
+
+  it('should return 200 with synced: 0 when every item lacks a price (all skipped)', async () => {
+    vi.mocked(dominos_model.syncCatalogToDb).mockResolvedValue({
+      synced: 0,
+      skipped: 25,
+      errors: [],
+    });
+
+    const res = await request(app).post('/api/dominos/sync_catalog');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.synced).toBe(0);
+    expect(res.body.skipped).toBe(25);
+    expect(res.body.errors).toHaveLength(0);
   });
 });

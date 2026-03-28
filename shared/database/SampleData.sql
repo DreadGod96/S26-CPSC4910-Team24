@@ -40,6 +40,8 @@ select * from Points;
 select * from Points_History;
 select * from Notification_Type;
 select * from Notification;
+select * from Product;
+select * from Order_Item;
 
 insert into Points values (16, 10);
 
@@ -66,3 +68,5 @@ notification_type_group
 call post_notification (
 	"PASSWORD_RESET"
 );
+
+ALTER TABLE Product ADD COLUMN product_code VARCHAR(100) NULL UNIQUE;

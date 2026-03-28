@@ -2,6 +2,7 @@ import { Menu, NearbyStores, Address } from 'dominos';
 import { readFile, writeFile, mkdir, access } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { upsert_product, create_order, add_order_item } from '../../../../../shared/lib/storedProcedures.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -195,6 +196,39 @@ export async function getItemImage(code) {
   }
 }
 
+// ─── Catalog → DB sync ───────────────────────────────────────────────────────
+
+/**
+ * Read the current menu cache and upsert every specialty item into the Product
+ * table. Items with a null price are skipped (no price to store).
+ * Returns a summary object: { synced, skipped, errors }.
+ */
+export async function syncCatalogToDb() {
+  const cache = await readCache();
+  if (!cache?.specialtyItems?.length) {
+    throw new Error('Menu cache is empty or missing. Fetch the menu at least once before syncing.');
+  }
+
+  let synced = 0;
+  let skipped = 0;
+  const errors = [];
+
+  for (const item of cache.specialtyItems) {
+    if (!item.price) {
+      skipped++;
+      continue;
+    }
+    try {
+      await upsert_product(item.code, item.name, item.price, item.description ?? null);
+      synced++;
+    } catch (err) {
+      errors.push({ code: item.code, name: item.name, error: err.message });
+    }
+  }
+
+  return { synced, skipped, errors };
+}
+
 // ─── In-memory cart store ────────────────────────────────────────────────────
 // Map<cartId, { cartId, items: Map<code, { code, name, price, quantity }>, createdAt }>
 const carts = new Map();
@@ -293,14 +327,35 @@ export function clearCart(cartId) {
 
 /**
  * Submit all items in the cart as a phantom order, then clear the cart.
+ * If userId is provided, also records the order and its items in the database.
  */
-export async function submitCart(cartId, { address, customer, payment }) {
+export async function submitCart(cartId, { address, customer, payment, userId }) {
   const cart = carts.get(cartId);
   if (!cart) throw new Error(`Cart not found: ${cartId}`);
   if (cart.items.size === 0) throw new Error('Cart is empty.');
 
-  const items = [...cart.items.values()].map(({ code, quantity }) => ({ code, quantity }));
+  const cartItems = [...cart.items.values()];
+  const items = cartItems.map(({ code, quantity }) => ({ code, quantity }));
   const result = await phantomPlaceOrder({ address, items, customer, payment });
+
+  // Record in DB if we have an authenticated user
+  if (userId) {
+    try {
+      const totalCost = cartItems.reduce((sum, i) => sum + (parseFloat(i.price) || 0) * i.quantity, 0);
+      const orderId = await create_order(userId, totalCost, 'confirmed');
+
+      // Insert one Order_Item row per unique product (schema has no quantity column)
+      for (const item of cartItems) {
+        await add_order_item(orderId, item.code);
+      }
+
+      result.dbOrderId = orderId;
+    } catch (dbErr) {
+      // DB write failure should not block the phantom order confirmation
+      console.error('[submitCart] DB write failed:', dbErr.message);
+      result.dbWarning = 'Order confirmed but failed to record in database.';
+    }
+  }
 
   cart.items.clear();
   return result;

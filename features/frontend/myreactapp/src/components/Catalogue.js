@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import "./Catalogue.css";
 
 const BASE_URL =
@@ -180,6 +181,7 @@ export default function Catalogue() {
   const [pointMin, setPointMin] = useState("");
   const [pointMax, setPointMax] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   // Cart state
@@ -297,6 +299,7 @@ export default function Catalogue() {
             phone: "8645550000",
           },
           payment: "cash",
+          userId: user?.user?.id ?? user?.id ?? null,
         }),
       });
       const data = await res.json();

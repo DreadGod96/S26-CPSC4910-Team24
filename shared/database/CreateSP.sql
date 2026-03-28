@@ -189,3 +189,70 @@ CREATE PROCEDURE post_notification(
     );
 end $$
 DELIMITER ;
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Dominos Catalog Sync & Order Recording
+-- Run the ALTER TABLE once to add product_code to Product.
+-- The three procedures below handle syncing and order recording.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- upsert_product
+-- Called once per item during a catalog sync.
+-- Inserts new products; updates name, price, and description if the code already exists.
+DROP PROCEDURE IF EXISTS upsert_product;
+DELIMITER $$
+CREATE PROCEDURE upsert_product(
+    IN in_code  VARCHAR(100),
+    IN in_name  VARCHAR(255),
+    IN in_price DECIMAL(10,2),
+    IN in_desc  TEXT
+)
+BEGIN
+    INSERT INTO Product (product_code, product_name, product_price, product_desc)
+    VALUES (in_code, in_name, in_price, in_desc)
+    ON DUPLICATE KEY UPDATE
+        product_name  = VALUES(product_name),
+        product_price = VALUES(product_price),
+        product_desc  = VALUES(product_desc);
+END$$
+DELIMITER ;
+
+-- create_order
+-- Inserts a row into the Order table and returns the new order_ID via OUT parameter.
+DROP PROCEDURE IF EXISTS create_order;
+DELIMITER $$
+CREATE PROCEDURE create_order(
+    IN  in_user_ID INT,
+    IN  in_cost    DECIMAL(10,2),
+    IN  in_status  VARCHAR(50),
+    OUT out_order_ID INT
+)
+BEGIN
+    INSERT INTO `Order` (user_ID, order_cost, order_date, order_status)
+    VALUES (in_user_ID, in_cost, CURRENT_DATE(), in_status);
+    SET out_order_ID = LAST_INSERT_ID();
+END$$
+DELIMITER ;
+
+-- add_order_item
+-- Resolves a Dominos product_code to its product_ID and inserts into Order_Item.
+-- Silently skips if the product_code is not found in Product (no sync yet).
+DROP PROCEDURE IF EXISTS add_order_item;
+DELIMITER $$
+CREATE PROCEDURE add_order_item(
+    IN in_order_ID    INT,
+    IN in_product_code VARCHAR(100)
+)
+BEGIN
+    DECLARE v_product_ID INT DEFAULT NULL;
+
+    SELECT product_ID INTO v_product_ID
+    FROM Product
+    WHERE product_code = in_product_code
+    LIMIT 1;
+
+    IF v_product_ID IS NOT NULL THEN
+        INSERT IGNORE INTO Order_Item (order_ID, product_ID)
+        VALUES (in_order_ID, v_product_ID);
+    END IF;
+END$$
+DELIMITER ;

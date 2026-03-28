@@ -10,6 +10,7 @@ import {
   removeFromCart,
   clearCart,
   submitCart,
+  syncCatalog,
 } from '../controllers/dominos_controller.js';
 
 const router = express.Router();
@@ -18,6 +19,7 @@ const router = express.Router();
 router.get('/get_menu', getDominosMenu);
 router.post('/place_order', phantomPlaceOrder);
 router.get('/item_image/:code', getItemImage);
+router.post('/sync_catalog', syncCatalog);
 
 // Cart
 router.post('/cart', createCart);

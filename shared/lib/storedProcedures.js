@@ -91,7 +91,7 @@ export const get_driver_points = async (driver_ID) => {
     const connection = await getPool().getConnection();
     try {
         const [rows] = await connection.execute(
-            `SELECT 
+            `SELECT
                 driver_ID,
                 SUM(point_amount) AS total_points,
                 JSON_ARRAYAGG(
@@ -113,6 +113,73 @@ export const get_driver_points = async (driver_ID) => {
         return rows[0] || null;
     } catch (err) {
         console.error("Error fetching driver points:", err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+// ─── Dominos Catalog & Order ──────────────────────────────────────────────────
+
+/**
+ * Insert or update a single product row keyed on its Dominos product_code.
+ * Safe to call repeatedly — updates name/price/desc if the code already exists.
+ */
+export const upsert_product = async (code, name, price, desc) => {
+    const connection = await getPool().getConnection();
+    try {
+        await connection.execute(
+            `CALL upsert_product(?, ?, ?, ?)`,
+            [code, name, parseFloat(price), desc ?? null]
+        );
+    } catch (err) {
+        console.error(`Error upserting product [${code}]:`, err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+/**
+ * Create a new Order row and return the generated order_ID.
+ * @param {number} user_ID
+ * @param {number} cost      - total cost in dollars
+ * @param {string} status    - e.g. "confirmed"
+ * @returns {Promise<number>} order_ID
+ */
+export const create_order = async (user_ID, cost, status) => {
+    const connection = await getPool().getConnection();
+    try {
+        await connection.execute(
+            `CALL create_order(?, ?, ?, @order_id)`,
+            [user_ID, parseFloat(cost), status]
+        );
+        const [[row]] = await connection.execute(`SELECT @order_id AS order_ID`);
+        return row.order_ID;
+    } catch (err) {
+        console.error('Error creating order:', err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+/**
+ * Add a single item to an existing order.
+ * Resolves the Dominos product_code to a product_ID internally.
+ * Silently skips if the product_code has not been synced yet.
+ * @param {number} order_ID
+ * @param {string} product_code  - e.g. "14SCREEN"
+ */
+export const add_order_item = async (order_ID, product_code) => {
+    const connection = await getPool().getConnection();
+    try {
+        await connection.execute(
+            `CALL add_order_item(?, ?)`,
+            [order_ID, product_code]
+        );
+    } catch (err) {
+        console.error(`Error adding order item [${product_code}]:`, err.message);
         throw err;
     } finally {
         connection.release();

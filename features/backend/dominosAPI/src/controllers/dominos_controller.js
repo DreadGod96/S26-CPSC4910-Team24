@@ -1,4 +1,5 @@
 import * as dominos_model from '../models/dominos_model.js';
+import { syncCatalogToDb } from '../models/dominos_model.js';
 
 // ─── Cart controllers ────────────────────────────────────────────────────────
 
@@ -58,10 +59,24 @@ export function clearCart(req, res) {
   }
 }
 
+export async function syncCatalog(req, res) {
+  try {
+    const summary = await syncCatalogToDb();
+    const status = summary.errors.length > 0 ? 207 : 200;
+    return res.status(status).json({
+      message: `Catalog sync complete. ${summary.synced} synced, ${summary.skipped} skipped (no price), ${summary.errors.length} errors.`,
+      ...summary,
+    });
+  } catch (err) {
+    console.error('[syncCatalog] Error:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+}
+
 export async function submitCart(req, res) {
   try {
     const { cartId } = req.params;
-    const { address: rawAddress, customer, payment: rawPayment } = req.body;
+    const { address: rawAddress, customer, payment: rawPayment, userId } = req.body;
 
     // Normalize address field aliases
     const address = {
@@ -73,7 +88,7 @@ export async function submitCart(req, res) {
     // Normalize payment: accept object { type } or plain string
     const payment = typeof rawPayment === 'object' ? rawPayment?.type : rawPayment;
 
-    const result = await dominos_model.submitCart(cartId, { address, customer, payment });
+    const result = await dominos_model.submitCart(cartId, { address, customer, payment, userId });
     return res.status(200).json(result);
   } catch (err) {
     const status = err.message.includes('not found') ? 404 : 400;
