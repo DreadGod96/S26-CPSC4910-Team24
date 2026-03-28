@@ -53,3 +53,28 @@ export const update_user_field_controller = async (req, res) => {
         res.status(500).json({ error: 'Error updating user in RDS' });
     }
 };
+
+
+export const update_settings_controller = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        if (!updates || Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: 'No data provided for update' });
+        }
+
+        const result = await user_model.update_user_profile(id, updates);
+
+        if (!result || result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Pull fresh data to send back to the React app
+        const updatedUser = await user_model.get_user_by_id(id);
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        console.error('Controller error: ', err.message);
+        res.status(500).json({ error: 'Error saving settings to RDS' });
+    }
+};
