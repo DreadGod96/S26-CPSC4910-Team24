@@ -15,7 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProductDetails from "./components/ProductDetails";
 import AdminUsers from "./components/AdminUsers";
 import AdminUserDetails from "./components/AdminUserDetails";
-import Settings from "./components/Settings"
+import Settings from "./components/Settings";
 
 
 function AppWrapper() {
