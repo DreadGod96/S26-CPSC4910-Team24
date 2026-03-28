@@ -100,14 +100,14 @@ const DriverApplicationForm = () => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await fetch('/api/application');
+        const response = await fetch(`${process.env.REACT_APP_APPLICATION_URL}/companylist`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         console.log('Raw response data:', data);
         
-        let companyList = Array.isArray(data[0]) ? data[0] : [];
+        let companyList = Array.isArray(data[0]) ? data[0] : (Array.isArray(data) ? data : []);
         console.log('Processed company list:', companyList);
         setCompanies(companyList);
       } catch (error) {
