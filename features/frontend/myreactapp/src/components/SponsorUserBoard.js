@@ -14,21 +14,21 @@ export default function SponsorUserBoard() {
         </div>
 
         {/* View Drivers */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/admin/users")}>
           <span className="card-icon">🚗</span>
           <span className="card-label">View Drivers</span>
           <span className="card-sub">Review &amp; manage drivers</span>
         </div>
 
         {/* Update Catalogue */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/catalogue")}>
           <span className="card-icon">🛒</span>
           <span className="card-label">Update Catalogue</span>
           <span className="card-sub">Add or edit products</span>
         </div>
 
         {/* Last Catalogue Report */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/catalogue-report")}>
           <span className="card-icon">📋</span>
           <span className="card-label">Last Catalogue Report</span>
           <span className="card-sub">12/20/25</span>
