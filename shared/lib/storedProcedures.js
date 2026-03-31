@@ -70,6 +70,31 @@ export const get_company_list = async () => {
     }
 };
 
+export const get_driver_applications = async (driver_ID) => {
+    const connection = await getPool().getConnection();
+    try {
+        const [rows] = await connection.execute(
+            `SELECT
+                a.application_ID,
+                a.application_name,
+                a.application_status,
+                a.application_date,
+                c.company_name
+            FROM Application a
+            LEFT JOIN Company c ON c.user_ID = a.sponsor_ID
+            WHERE a.driver_ID = ?
+            ORDER BY a.application_date DESC, a.application_ID DESC`,
+            [driver_ID]
+        );
+        return rows;
+    } catch (err) {
+        console.error("Error fetching driver applications:", err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
 export const get_company_id_by_name = async (company_name) => {
     const connection = await getPool().getConnection();
     try {
