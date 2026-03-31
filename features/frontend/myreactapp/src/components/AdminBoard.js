@@ -25,14 +25,14 @@ export default function AdminBoard() {
         </div>
 
         {/* Manage Catalogues */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/catalogue")}>
           <span className="card-icon">📦</span>
           <span className="card-label">Manage Catalogues</span>
           <span className="card-sub">Sponsor products</span>
         </div>
 
         {/* Report Issues */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/report-issues")}>
           <span className="card-icon">🚩</span>
           <span className="card-label">Report Issues</span>
           <span className="card-sub">Flag &amp; track problems</span>
