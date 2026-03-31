@@ -25,14 +25,14 @@ export default function SponsorOrgBoard() {
         </div>
 
         {/* View Order History */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/order-history")}>
           <span className="card-icon">🧾</span>
           <span className="card-label">Order History</span>
           <span className="card-sub">Review past orders</span>
         </div>
 
         {/* Last Catalogue Report */}
-        <div className="card">
+        <div className="card" onClick={() => navigate("/catalogue-report")}>
           <span className="card-icon">📋</span>
           <span className="card-label">Last Catalogue Report</span>
           <span className="card-sub">12/20/25</span>
