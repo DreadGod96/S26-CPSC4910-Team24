@@ -44,7 +44,11 @@ export default function SponsorOrgBoard() {
           <span className="card-label">Account Settings</span>
           <span className="card-sub">Profile &amp; password</span>
         </div>
-
+          
+      <div className="card" onClick={() => navigate("/readapp")}>
+        Review applications
+      </div>
+          
       </div>
     </div>
   );
