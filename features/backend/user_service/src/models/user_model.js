@@ -109,3 +109,19 @@ export const update_user_profile = async (user_id, updates) => {
         throw err;
     }
 };
+
+
+export const delete_user = async (user_id) => {
+    try {
+        const [result] = await getPool().query(`
+            UPDATE \`User\`
+            SET user_end_date = CURDATE()
+            WHERE user_ID = ?
+        `, [user_id]);
+
+        return result;
+    } catch (err) {
+        console.error('Model error: ', err.message);
+        throw err;
+    }
+};

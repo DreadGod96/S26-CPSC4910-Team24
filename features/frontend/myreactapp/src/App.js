@@ -16,6 +16,7 @@ import ProductDetails from "./components/ProductDetails";
 import AdminUsers from "./components/AdminUsers";
 import AdminUserDetails from "./components/AdminUserDetails";
 import Settings from "./components/Settings";
+import AdminCreateUser from "./components/AdminCreateUser";
 
 
 function AppWrapper() {
@@ -85,11 +86,11 @@ function AppInner() {
         <Route path="/orgboard" element={<ProtectedRoute><SponsorOrgBoard/></ProtectedRoute>}/>
         <Route path="/sponsboard" element={<ProtectedRoute><SponsorUserBoard/></ProtectedRoute>}/>
         <Route path="/adboard" element={<ProtectedRoute><AdminBoard/></ProtectedRoute>}/>
-        <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
-        <Route path="/admin/users/:id" element={<ProtectedRoute><AdminUserDetails /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute><AdminUsers/></ProtectedRoute>} />
+        <Route path="/admin/users/:id" element={<ProtectedRoute><AdminUserDetails/></ProtectedRoute>} />
+        <Route path="/admin/users/create" element={<ProtectedRoute><AdminCreateUser/></ProtectedRoute>} />
         <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
-        <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}
-/>
+        <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}/>
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -1,5 +1,11 @@
 import express from 'express';
-import { pull_users, pull_user_by_id, update_user_field_controller, update_settings_controller } from '../controllers/user_controller.js';
+import {
+  pull_users,
+  pull_user_by_id,
+  update_user_field_controller,
+  update_settings_controller,
+  delete_user_controller
+} from '../controllers/user_controller.js';
 
 const router = express.Router();
 
@@ -7,5 +13,6 @@ router.get('/', pull_users);
 router.get('/:id', pull_user_by_id);
 router.put('/:id', update_user_field_controller);
 router.put('/settings/:id', update_settings_controller);
+router.delete('/:id', delete_user_controller);
 
 export default router;

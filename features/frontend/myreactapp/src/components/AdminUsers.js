@@ -7,17 +7,22 @@ export default function AdminUsers() {
   const navigate = useNavigate();
 
   useEffect(() => {
-  fetch(process.env.REACT_APP_USER_URL)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      setUsers(Array.isArray(data) ? data : []);
-    })
-    .catch((err) => {
-      console.error("Error fetching users:", err);
-      setUsers([]);
-    });
-}, []);
+    fetch(process.env.REACT_APP_USER_URL)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch users: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setUsers(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching users:", err);
+        setUsers([]);
+      });
+  }, []);
 
   const drivers = users.filter((u) => u.user_role?.toLowerCase() === "driver");
   const sponsors = users.filter((u) => u.user_role?.toLowerCase() === "sponsor");
@@ -40,10 +45,21 @@ export default function AdminUsers() {
   return (
     <div className="admin-users-page">
       <div className="admin-users-container">
-        <h1 className="admin-users-title">Manage Users</h1>
-        <p className="admin-users-subtitle">
-          View drivers, sponsors, and admins
-        </p>
+        <div className="admin-users-header">
+          <div>
+            <h1 className="admin-users-title">Manage Users</h1>
+            <p className="admin-users-subtitle">
+              View drivers, sponsors, and admins
+            </p>
+          </div>
+
+          <button
+            className="create-user-button"
+            onClick={() => navigate("/admin/users/create")}
+          >
+            + Create Account
+          </button>
+        </div>
 
         <div className="user-section">
           <h2>Drivers</h2>

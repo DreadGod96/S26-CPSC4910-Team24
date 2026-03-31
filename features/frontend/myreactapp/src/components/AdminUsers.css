@@ -9,17 +9,48 @@
   margin: 0 auto;
 }
 
+.admin-users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
 .admin-users-title {
   font-size: 2rem;
   color: #123b5d;
   margin-bottom: 8px;
-  text-align: center;
+  text-align: left;
 }
 
 .admin-users-subtitle {
-  text-align: center;
+  text-align: left;
   color: #6b7a89;
-  margin-bottom: 32px;
+  margin-bottom: 0;
+}
+
+.create-user-button {
+  background-color: #1e3a5f;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.create-user-button:hover {
+  background-color: #274c77;
+  transform: translateY(-1px);
+}
+
+.create-user-button:active {
+  transform: translateY(0);
 }
 
 .user-section {

@@ -175,3 +175,23 @@
   align-items: center;
   gap: 12px;
 }
+
+.delete-user-button {
+  background-color: #b91c1c; /* red */
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.delete-user-button:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.delete-user-button:active {
+  transform: translateY(0);
+}

@@ -78,3 +78,23 @@ export const update_settings_controller = async (req, res) => {
         res.status(500).json({ error: 'Error saving settings to RDS' });
     }
 };
+
+export const delete_user_controller = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await user_model.delete_user(id);
+
+        if (!result || result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User account ended successfully' });
+    } catch (err) {
+        console.error('Controller error deleting user:', err);
+        res.status(500).json({
+            error: 'Error ending user account in RDS',
+            details: err.message
+        });
+    }
+};
