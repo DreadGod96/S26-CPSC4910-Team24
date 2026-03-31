@@ -92,7 +92,7 @@ function AppInner() {
         <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
         <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}/>
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-        <Route path="/readapp" element={<ProtectedRoute><ReadApplication /></ProtectedRoute}/>
+        <Route path="/readapp" element={<ProtectedRoute><ReadApplication /></ProtectedRoute>}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
