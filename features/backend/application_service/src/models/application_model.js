@@ -1,5 +1,5 @@
 //Call DB
-import { submit_application, get_company_list as get_company_list_sp , get_company_id_by_name as get_company_id_by_name_sp} from '../../../../../shared/lib/storedProcedures.js'
+import { submit_application, get_company_list as get_company_list_sp, get_company_id_by_name as get_company_id_by_name_sp, get_driver_applications as get_driver_applications_sp } from '../../../../../shared/lib/storedProcedures.js'
 
 export const post_application = async (driver_ID, application_title, company_ID) => {
     try {
@@ -17,6 +17,15 @@ export const get_company_list = async () => {
     try {
         const result = await get_company_list_sp();
         return result;
+    } catch (err) {
+        console.error('Model error: ', err.message);
+        throw err;
+    }
+};
+
+export const get_applications_by_driver = async (driver_ID) => {
+    try {
+        return await get_driver_applications_sp(driver_ID);
     } catch (err) {
         console.error('Model error: ', err.message);
         throw err;
