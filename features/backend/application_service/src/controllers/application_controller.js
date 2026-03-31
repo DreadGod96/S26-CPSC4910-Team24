@@ -1,6 +1,20 @@
 import * as about_model from '../models/application_model.js';
 import { get_company_id_by_name as getCompanyIdFromDB } from '../../../../../shared/lib/storedProcedures.js';
 
+export const get_driver_applications = async (req, res) => {
+    try {
+        const { driver_id } = req.params;
+        if (!driver_id) {
+            return res.status(400).json({ error: "Missing driver_id" });
+        }
+        const applications = await about_model.get_applications_by_driver(driver_id);
+        res.json(applications);
+    } catch (err) {
+        console.error('Controller error: ', err.message);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 export const post_data = async (req, res) => {
     try {
         const { driver_ID, application_title, company_name } = req.body;
