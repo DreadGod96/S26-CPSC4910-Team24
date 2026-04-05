@@ -1,4 +1,5 @@
 import { getPool } from '../../../../../shared/lib/db.js';
+import bcrypt from 'bcrypt';
 
 // Get all users
 export const get_users = async () => {
@@ -79,12 +80,10 @@ export const update_user_field = async (user_id, field, value) => {
     }
 };
 
-// ... existing get_users and get_user_by_id ...
-
 export const update_user_profile = async (user_id, updates) => {
     const allowedFields = ['user_fname', 'user_lname', 'user_email', 'user_phone_number', 'user_username'];
     
-    // Filter out any unapproved fields sent from the frontend
+    // Filter out fields sent from the frontend
     const filteredUpdates = Object.keys(updates)
         .filter(key => allowedFields.includes(key))
         .reduce((obj, key) => {
@@ -122,6 +121,25 @@ export const delete_user = async (user_id) => {
         return result;
     } catch (err) {
         console.error('Model error: ', err.message);
+        throw err;
+    }
+};
+
+export const update_user_password = async (user_id, new_password) => {
+    try {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(new_password, saltRounds);
+
+        // This targets the Login table which stores your credentials
+        const [result] = await getPool().query(`
+            UPDATE \`Login\` 
+            SET password_hash = ?, login_date = CURRENT_DATE() 
+            WHERE user_ID = ?
+        `, [hashedPassword, user_id]);
+
+        return result;
+    } catch (err) {
+        console.error('Model error (password): ', err.message);
         throw err;
     }
 };
