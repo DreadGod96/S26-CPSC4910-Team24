@@ -18,7 +18,7 @@ import AdminUserDetails from "./components/AdminUserDetails";
 import Settings from "./components/Settings";
 import AdminCreateUser from "./components/AdminCreateUser";
 import ReadApplication from "./components/ReadApplication";
-import AuditLog from './components/AuditLogReport';
+import AuditLog from './components/AuditLog';
 
 function AppWrapper() {
   return (

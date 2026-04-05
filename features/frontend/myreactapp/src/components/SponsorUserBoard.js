@@ -48,13 +48,6 @@ export default function SponsorUserBoard() {
           <span className="card-sub">View system &amp; security events</span>
         </div>
 
-        {/* Financial Reports */}
-        <div className="card" onClick={() => navigate("/admin/reports")}>
-          <span className="card-icon">📊</span>
-          <span className="card-label">Financial Reports</span>
-          <span className="card-sub">Sales, Invoices &amp; Fees</span>
-        </div>
-
       </div>
     </div>
   );
