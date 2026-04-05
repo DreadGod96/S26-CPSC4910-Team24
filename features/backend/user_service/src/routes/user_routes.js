@@ -15,5 +15,6 @@ router.get('/:id', pull_user_by_id);
 router.put('/:id', update_user_field_controller);
 router.put('/settings/:id', update_settings_controller);
 router.delete('/:id', delete_user_controller);
+router.put('/change-password/:id', change_password_controller);
 
 export default router;
