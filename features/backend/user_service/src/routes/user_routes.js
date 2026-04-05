@@ -4,7 +4,8 @@ import {
   pull_user_by_id,
   update_user_field_controller,
   update_settings_controller,
-  delete_user_controller
+  delete_user_controller,
+  change_password_controller
 } from '../controllers/user_controller.js';
 
 const router = express.Router();
