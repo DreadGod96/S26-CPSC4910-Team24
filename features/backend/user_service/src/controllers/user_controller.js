@@ -98,3 +98,25 @@ export const delete_user_controller = async (req, res) => {
         });
     }
 };
+
+export const change_password_controller = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { newPassword, confirmPassword } = req.body;
+
+        if (!newPassword || newPassword !== confirmPassword) {
+            return res.status(400).json({ error: 'Passwords do not match' });
+        }
+
+        const result = await user_model.update_user_password(id, newPassword);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Login record not found' });
+        }
+
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (err) {
+        console.error('Controller error: ', err.message);
+        res.status(500).json({ error: 'Server error updating password' });
+    }
+};
