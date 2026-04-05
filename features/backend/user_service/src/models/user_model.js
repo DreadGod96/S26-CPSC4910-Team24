@@ -126,20 +126,12 @@ export const delete_user = async (user_id) => {
 };
 
 export const update_user_password = async (user_id, new_password) => {
-    try {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(new_password, saltRounds);
 
-        // This targets the Login table which stores your credentials
-        const [result] = await getPool().query(`
-            UPDATE \`Login\` 
-            SET password_hash = ?, login_date = CURRENT_DATE() 
-            WHERE user_ID = ?
-        `, [hashedPassword, user_id]);
-
-        return result;
-    } catch (err) {
-        console.error('Model error (password): ', err.message);
-        throw err;
-    }
-};
+        const [result] = await getPool().query(
+            "UPDATE `Login` SET password_hash = ? WHERE user_ID = ?",
+            [hashedPassword, user_id]
+    );
+    return result;
+}
