@@ -85,7 +85,7 @@ const Settings = () => {
             const response = await fetch(`${process.env.REACT_APP_USER_URL}/change-password/${userId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ newPassword: passwords.newPassword })
+                body: JSON.stringify({ newPassword: passwords.newPassword, confirmPassword: passwords.confirmPassword })
             });
             if (response.ok) {
                 setStatus({ type: 'success', msg: 'Password changed successfully!' });
@@ -112,7 +112,7 @@ const Settings = () => {
                     <h2>Profile Information</h2>
                     <form onSubmit={handleProfileSubmit} className="settings-form">
                         <div className="form-group">
-                            <label>Username (Read-only)</label>
+                            <label>Username</label>
                             <input name="user_username" value={formData.user_username} disabled className="disabled-input" />
                         </div>
                         <div className="form-row">
