@@ -31,15 +31,22 @@ function AppWrapper() {
 }
 
 function AppInner() {
-  
-
-  const { logout, isAuthenticated } = useAuth();
-
+  const { logout, isAuthenticated, user } = useAuth(); // Added 'user' here
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  // Helper to determine where the "Dashboard" button should go
+  const getDashboardPath = () => {
+    if (!user?.user?.role) return "/login";
+    const role = user.user.role.toLowerCase();
+    
+    if (role === 'admin') return "/adboard";
+    if (role === 'sponsor') return "/sponsboard";
+    return "/dashboard"; // Default for Drivers
   };
 
   return (
@@ -50,26 +57,37 @@ function AppInner() {
             <div className="logo">
               <img src="/hugo.jpeg" alt="hugo" />
             </div>
+            
+            {/* Dynamic Dashboard Link */}
+            {isAuthenticated && (
+              <li>
+                <Link to={getDashboardPath()} style={{ fontWeight: 'bold', color: 'var(--rose-hover)' }}>
+                  Dashboard
+                </Link>
+              </li>
+            )}
+
             <li>
-            < Link to="/about">About</Link>
+              <Link to="/about">About</Link>
             </li>
             <li>
               <Link to="/apply">Apply as Driver</Link>
             </li>
-              <li>
+            <li>
               <Link to="/catalogue">Catalogue</Link>
-              </li>
-              {!isAuthenticated ? (
+            </li>
+            
+            {!isAuthenticated ? (
               <li>
                 <Link to="/login">Login</Link>
               </li>
-              ) : (
-                <li>
-                  <button className="btn btn-sm" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </li>
-              )}
+            ) : (
+              <li>
+                <button className="btn btn-sm" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+            )}
           </ul>
           <div className="rightNav">
             <input type="text" name="search" id="search" />
@@ -77,9 +95,18 @@ function AppInner() {
           </div>
         </nav>
       </div>
+
       <Routes>
-        <Route path="/" element={<ProtectedRoute><About /></ProtectedRoute>} />
-        <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
+        {/* FIX: Root path now goes to the correct dashboard instead of About */}
+        <Route path="/" element={
+          <ProtectedRoute>
+            {user?.user?.role === 'admin' ? <AdminBoard /> : 
+             user?.user?.role === 'sponsor' ? <SponsorUserBoard /> : 
+             <DashBoard />}
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/about" element={<About />} />
         <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/apply" element={<ProtectedRoute><DriverApplicationForm /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
