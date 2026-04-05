@@ -18,6 +18,7 @@ import AdminUserDetails from "./components/AdminUserDetails";
 import Settings from "./components/Settings";
 import AdminCreateUser from "./components/AdminCreateUser";
 import ReadApplication from "./components/ReadApplication";
+import AuditLog from './components/AuditLogReport';
 
 function AppWrapper() {
   return (
@@ -92,6 +93,7 @@ function AppInner() {
         <Route path="/catalogue" element={<ProtectedRoute><Catalogue /></ProtectedRoute>} />
         <Route path="/product/:code" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>}/>
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/admin/audit" element={<ProtectedRoute><AuditLog /></ProtectedRoute>} />
         <Route path="/readapp" element={<ProtectedRoute><ReadApplication /></ProtectedRoute>}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
