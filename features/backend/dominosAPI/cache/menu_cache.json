@@ -1045,32 +1045,6 @@
       }
     },
     {
-      "code": "F_SREDPEP",
-      "name": "Red Pepper Seasoning Flakes",
-      "description": "Crushed red pepper adds a spicy kick to pizzas and pastas.",
-      "defaultToppings": "",
-      "tags": {
-        "optionQtys": [
-          1
-        ],
-        "maxOptionQty": "1",
-        "subcategory": "Side"
-      }
-    },
-    {
-      "code": "F_SGPARM",
-      "name": "Grated Parmesan Cheese",
-      "description": "Grated Parmesan cheese in a shaker bottle. Great for pizza, pastas & breadsticks.",
-      "defaultToppings": "",
-      "tags": {
-        "optionQtys": [
-          1
-        ],
-        "maxOptionQty": "1",
-        "subcategory": "Side"
-      }
-    },
-    {
       "code": "F_FORK",
       "name": "Fork",
       "description": "",

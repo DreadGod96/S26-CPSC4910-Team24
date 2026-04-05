@@ -1,7 +1,14 @@
 {
-   "type": "module", 
-  "scripts": {
-    "start": "node src/server.js",
-    "test": "vitest run"
-  }
+   "type": "module",
+   "scripts": {
+      "start": "node src/server.js",
+      "test": "vitest run"
+   },
+   "dependencies": {
+      "bcrypt": "^6.0.0",
+      "cors": "^2.8.6",
+      "dotenv": "^17.4.0",
+      "express": "^5.2.1",
+      "mysql2": "^3.20.0"
+   }
 }
