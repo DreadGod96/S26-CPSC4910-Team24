@@ -100,6 +100,7 @@ export const delete_user_controller = async (req, res) => {
 };
 
 export const change_password_controller = async (req, res) => {
+    console.log(">>> [DEBUG] Hit the Change Password Controller for ID:", req.params.id);
     try {
         const { id } = req.params;
         const { newPassword, confirmPassword } = req.body;

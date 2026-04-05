@@ -13,7 +13,7 @@ dotenv.config({ path: path.resolve(__dirname, env_path) });
 console.log(`Connecting to host: ${process.env.DB_HOST}`);
 
 const app = express();
-const PORT = process.env.USER_PORT || 3006;
+const PORT = process.env.USER_PORT || 3008;
 
 const config = {
     origin: [
