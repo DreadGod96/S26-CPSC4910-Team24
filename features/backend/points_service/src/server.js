@@ -19,7 +19,7 @@ const config = {
         'https://downloadmoredpi.com',
         'http://localhost:3000'
     ],
-    methods: ['GET', 'OPTIONS'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true
 };
 

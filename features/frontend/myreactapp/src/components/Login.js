@@ -34,7 +34,7 @@ export default function Login() {
                                                   //    |||||
     //IF YOU DONT FEEL LIKE STARTING THE LOGIN SERVICE! VVVVV
     if (email === "test@test.com" && password === "password") {
-    login({ email: "test@test.com", role: "admin" });
+    login({id: 1, email: "test@test.com", role: "admin"});
     navigate("/adboard", { replace: true });
     return;
     }

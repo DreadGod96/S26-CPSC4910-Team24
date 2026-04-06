@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import "./AdminUserDetails.css";
+
+
 
 export default function AdminUserDetails() {
   const { id } = useParams();
@@ -10,7 +13,9 @@ export default function AdminUserDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [pointsValue, setPointsValue] = useState("");
-  const navigate = useNavigate();
+  const { user: authUser } = useAuth();
+  const POINTS_URL =
+    process.env.REACT_APP_POINTS_URL || "http://localhost:3004/api/points";
 
   useEffect(() => {
     setLoading(true);
@@ -33,6 +38,28 @@ export default function AdminUserDetails() {
         setLoading(false);
       });
   }, [id]);
+
+    useEffect(() => {
+    if (!user || user.user_role?.toLowerCase() !== "driver") return;
+
+    fetch(`${POINTS_URL}/${id}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch points: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setUser((prev) => ({
+          ...prev,
+          point_total: data.total_points,
+          point_history: data.point_history || [],
+        }));
+      })
+      .catch((err) => {
+        console.error("Error fetching driver points:", err);
+      });
+  }, [user?.user_role, id, POINTS_URL]);
 
   const startEditing = (field, currentValue) => {
     setEditingField(field);
@@ -71,7 +98,12 @@ export default function AdminUserDetails() {
     }
   };
 
-  const handleDeleteClick = async () => {
+const handleDeactivateClick = async () => {
+  if (isInactive) {
+    alert("This account is already inactive.");
+    return;
+  }
+
   const confirmed = window.confirm(
     "Are you sure you want to deactivate this account?"
   );
@@ -88,23 +120,69 @@ export default function AdminUserDetails() {
 
     const text = await response.text();
 
-    console.log("DELETE status:", response.status);
-    console.log("DELETE response:", text);
-
     if (!response.ok) {
-      throw new Error(`Failed to delete user: ${response.status} - ${text}`);
+      throw new Error(`Failed to deactivate user: ${response.status} - ${text}`);
     }
 
-    alert("User deleted successfully.");
-    navigate("/admin/users");
+    setUser((prev) => ({
+      ...prev,
+      user_end_date: new Date().toISOString().split("T")[0],
+    }));
+
+    alert("User account deactivated successfully.");
   } catch (err) {
-    console.error("Error deleting user:", err);
-    alert(err.message || "Failed to delete user.");
+    console.error("Error deactivating user:", err);
+    alert(err.message || "Failed to deactivate user.");
   }
 };
 
-  const handlePointsSave = () => {
-    alert("Driver points backend is not connected yet.");
+    const handlePointsSave = async () => {
+    const parsedPoints = Number(pointsValue);
+
+    if (Number.isNaN(parsedPoints) || pointsValue === "") {
+      alert("Enter a valid point adjustment.");
+      return;
+    }
+
+    const sponsorId = authUser?.user?.id || 1;
+
+    if (!sponsorId) {
+      alert("No logged-in admin ID found. Use a real logged-in account, not the shortcut test login.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${POINTS_URL}/adjust`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          driver_id: Number(id),
+          point_amount: parsedPoints,
+          sponsor_id: sponsorId,
+          reason: "Admin adjustment",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update points");
+      }
+
+      setUser((prev) => ({
+        ...prev,
+        point_total: data.total_points,
+        point_history: data.point_history || prev.point_history || [],
+      }));
+
+      setPointsValue("");
+      alert("Points updated successfully.");
+    } catch (err) {
+      console.error("Error updating points:", err);
+      alert(err.message || "Failed to update points.");
+    }
   };
 
   const renderEditableRow = (label, field, value, type = "text") => (
@@ -184,6 +262,8 @@ export default function AdminUserDetails() {
   }
 
   const isDriver = user.user_role?.toLowerCase() === "driver";
+  const isInactive = Boolean(user.user_end_date);
+  const accountStatus = isInactive ? "Inactive" : "Active";
 
   return (
     <div className="admin-user-details-page">
@@ -209,14 +289,18 @@ export default function AdminUserDetails() {
               </h2>
               <p className="details-role">{user.user_role}</p>
             </div>
-
-            <button className="delete-user-button" onClick={handleDeleteClick}>
-              Delete Account
-            </button>
+            <button
+            className="delete-user-button"
+            onClick={handleDeactivateClick}
+            disabled={isInactive}
+            >
+  {isInactive ? "Account Inactive" : "Deactivate Account"}
+</button>
           </div>
 
           <div className="details-grid">
             {renderReadOnlyRow("ID", user.user_ID)}
+            {renderReadOnlyRow("Account Status", accountStatus)}
             {renderEditableRow("First Name", "user_fname", user.user_fname)}
             {renderEditableRow("Last Name", "user_lname", user.user_lname)}
             {renderEditableRow("Email", "user_email", user.user_email, "email")}
@@ -251,7 +335,7 @@ export default function AdminUserDetails() {
               <div className="detail-row">
                 <span className="detail-label">Current Points</span>
                 <span className="detail-value">
-                  {user.point_total ?? "Not connected yet"}
+                  {user.point_total ?? "No points found"}
                 </span>
               </div>
 
@@ -263,10 +347,10 @@ export default function AdminUserDetails() {
                     type="number"
                     value={pointsValue}
                     onChange={(e) => setPointsValue(e.target.value)}
-                    placeholder="Enter new point total"
+                    placeholder="Enter point change (example: 10 or -5)"
                   />
                   <button className="save-button" onClick={handlePointsSave}>
-                    Save Points
+                    Apply Change
                   </button>
                 </div>
               </div>

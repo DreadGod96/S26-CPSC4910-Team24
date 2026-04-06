@@ -115,29 +115,54 @@ export const get_company_id_by_name = async (company_name) => {
 export const get_driver_points = async (driver_ID) => {
     const connection = await getPool().getConnection();
     try {
-        const [rows] = await connection.execute(
-            `SELECT
-                driver_ID,
-                SUM(point_amount) AS total_points,
-                JSON_ARRAYAGG(
-                    JSON_OBJECT(
-                        'point_date', point_date,
-                        'point_amount', point_amount,
-                        'points_reason', points_reason,
-                        'sponsor_ID', sponsor_ID
-                    )
-                ) AS point_history
-            FROM (
-                SELECT * FROM Points
-                WHERE driver_ID = ?
-                ORDER BY point_date DESC
-            ) AS sorted_points
-            GROUP BY driver_ID`,
+        const [totalRows] = await connection.execute(
+            `SELECT driver_ID, point_amount
+             FROM Points
+             WHERE driver_ID = ?`,
             [driver_ID]
         );
-        return rows[0] || null;
+
+        const [historyRows] = await connection.execute(
+            `SELECT
+                point_date,
+                point_amount,
+                points_reason,
+                sponsor_ID
+             FROM Points_History
+             WHERE driver_ID = ?
+             ORDER BY point_date DESC`,
+            [driver_ID]
+        );
+
+        return {
+            driver_ID,
+            total_points: totalRows[0]?.point_amount ?? 0,
+            point_history: historyRows
+        };
     } catch (err) {
         console.error("Error fetching driver points:", err.message);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+export const modify_driver_points = async (
+    driver_ID,
+    point_amount,
+    sponsor_ID,
+    points_reason
+) => {
+    const connection = await getPool().getConnection();
+    try {
+        await connection.execute(
+            `CALL modify_points(?, ?, ?, ?)`,
+            [driver_ID, point_amount, sponsor_ID, points_reason]
+        );
+
+        return await get_driver_points(driver_ID);
+    } catch (err) {
+        console.error("Error modifying driver points:", err.message);
         throw err;
     } finally {
         connection.release();
